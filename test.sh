@@ -1,0 +1,1 @@
+./main test/test.c
