@@ -6,15 +6,11 @@ by ROCHA, Rodrigo Caetano
 
 ### DONE
 
-- Scanner: lexical analyser
-
-- Parser: syntactic analyser
-
-- Macro pre-processor (e.g.: #include, #define)
-
-- Basic data-type structures (e.g.: primitives, struct)
-
-- Basic identifier structures (e.g.: function names, variable names)
+* Scanner: lexical analyser
+* Parser: syntactic analyser
+* Macro pre-processor (e.g.: #include, #define)
+* Basic data-type structures (e.g.: primitives, struct)
+* Basic identifier structures (e.g.: function names, variable names)
 
 ### Dependencies
 
