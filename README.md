@@ -12,7 +12,7 @@ by ROCHA, Rodrigo Caetano
 * Basic data-type structures (e.g.: primitives, struct)
 * Basic identifier structures (e.g.: function names, variable names)
 
-### Dependencies
+### Building Dependencies
 
 * [gcc](https://gcc.gnu.org/)
 * [bison](http://www.gnu.org/software/bison/) 
