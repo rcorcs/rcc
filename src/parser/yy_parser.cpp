@@ -66,7 +66,7 @@
 /* Copy the first part of user declarations.  */
 
 /* Line 268 of yacc.c  */
-#line 2 "parser/yacc.y"
+#line 2 "src/parser/yacc.y"
 
 
 // Analisador léxico que será chamado pelo Parser.
@@ -78,7 +78,7 @@ void yyerror(const char *);
 
 
 /* Line 268 of yacc.c  */
-#line 82 "parser/yy_parser.cpp"
+#line 82 "src/parser/yy_parser.cpp"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -180,7 +180,7 @@ typedef int YYSTYPE;
 
 
 /* Line 343 of yacc.c  */
-#line 184 "parser/yy_parser.cpp"
+#line 184 "src/parser/yy_parser.cpp"
 
 #ifdef short
 # undef short
@@ -1959,7 +1959,7 @@ yyreduce:
       
 
 /* Line 1806 of yacc.c  */
-#line 1963 "parser/yy_parser.cpp"
+#line 1963 "src/parser/yy_parser.cpp"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2190,7 +2190,7 @@ yyreturn:
 
 
 /* Line 2067 of yacc.c  */
-#line 429 "parser/yacc.y"
+#line 429 "src/parser/yacc.y"
 
 #include <stdio.h>
 

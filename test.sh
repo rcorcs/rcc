@@ -1,1 +1,1 @@
-./main test/test.c
+./bin/rcc test/test.c

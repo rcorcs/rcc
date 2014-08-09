@@ -1,2 +1,2 @@
-flex -oscanner/lex.cpp scanner/lex.l
-bison -o parser/yy_parser.cpp --defines=parser/yy_parser.h parser/yacc.y
+flex -osrc/scanner/lex.cpp src/scanner/lex.l
+bison -o src/parser/yy_parser.cpp --defines=src/parser/yy_parser.h src/parser/yacc.y
