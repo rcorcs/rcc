@@ -9,7 +9,7 @@
 #define FLEX_SCANNER
 #define YY_FLEX_MAJOR_VERSION 2
 #define YY_FLEX_MINOR_VERSION 5
-#define YY_FLEX_SUBMINOR_VERSION 35
+#define YY_FLEX_SUBMINOR_VERSION 39
 #if YY_FLEX_SUBMINOR_VERSION > 0
 #define FLEX_BETA
 #endif
@@ -162,7 +162,12 @@ typedef unsigned int flex_uint32_t;
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 #endif
 
-extern int yyleng;
+#ifndef YY_TYPEDEF_YY_SIZE_T
+#define YY_TYPEDEF_YY_SIZE_T
+typedef size_t yy_size_t;
+#endif
+
+extern yy_size_t yyleng;
 
 extern FILE *yyin, *yyout;
 
@@ -171,6 +176,7 @@ extern FILE *yyin, *yyout;
 #define EOB_ACT_LAST_MATCH 2
 
     #define YY_LESS_LINENO(n)
+    #define YY_LINENO_REWIND_TO(ptr)
     
 /* Return all but the first "n" matched characters back to the input stream. */
 #define yyless(n) \
@@ -187,11 +193,6 @@ extern FILE *yyin, *yyout;
 	while ( 0 )
 
 #define unput(c) yyunput( c, (yytext_ptr)  )
-
-#ifndef YY_TYPEDEF_YY_SIZE_T
-#define YY_TYPEDEF_YY_SIZE_T
-typedef size_t yy_size_t;
-#endif
 
 #ifndef YY_STRUCT_YY_BUFFER_STATE
 #define YY_STRUCT_YY_BUFFER_STATE
@@ -210,7 +211,7 @@ struct yy_buffer_state
 	/* Number of characters read into yy_ch_buf, not including EOB
 	 * characters.
 	 */
-	int yy_n_chars;
+	yy_size_t yy_n_chars;
 
 	/* Whether we "own" the buffer - i.e., we know we created it,
 	 * and can realloc() it to grow it, and should free() it to
@@ -280,8 +281,8 @@ static YY_BUFFER_STATE * yy_buffer_stack = 0; /**< Stack as an array. */
 
 /* yy_hold_char holds the character lost when yytext is formed. */
 static char yy_hold_char;
-static int yy_n_chars;		/* number of characters read into yy_ch_buf */
-int yyleng;
+static yy_size_t yy_n_chars;		/* number of characters read into yy_ch_buf */
+yy_size_t yyleng;
 
 /* Points to current character in buffer. */
 static char *yy_c_buf_p = (char *) 0;
@@ -309,7 +310,7 @@ static void yy_init_buffer (YY_BUFFER_STATE b,FILE *file  );
 
 YY_BUFFER_STATE yy_scan_buffer (char *base,yy_size_t size  );
 YY_BUFFER_STATE yy_scan_string (yyconst char *yy_str  );
-YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,int len  );
+YY_BUFFER_STATE yy_scan_bytes (yyconst char *bytes,yy_size_t len  );
 
 void *yyalloc (yy_size_t  );
 void *yyrealloc (void *,yy_size_t  );
@@ -341,7 +342,7 @@ void yyfree (void *  );
 
 /* Begin user sect3 */
 
-#define yywrap(n) 1
+#define yywrap() 1
 #define YY_SKIP_YYWRAP
 
 typedef unsigned char YY_CHAR;
@@ -852,6 +853,8 @@ void comment();
 int check_type();
 int check_def();
 
+char * lexeme();
+
 
 
  
@@ -864,7 +867,7 @@ int check_def();
 
 
 
-#line 868 "src/scanner/lex.cpp"
+#line 871 "src/scanner/lex.cpp"
 
 #define INITIAL 0
 #define IFILE 1
@@ -919,7 +922,7 @@ FILE *yyget_out (void );
 
 void yyset_out  (FILE * out_str  );
 
-int yyget_leng (void );
+yy_size_t yyget_leng (void );
 
 char *yyget_text (void );
 
@@ -1070,11 +1073,6 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 57 "src/scanner/lex.l"
-
-
-#line 1077 "src/scanner/lex.cpp"
-
 	if ( !(yy_init) )
 		{
 		(yy_init) = 1;
@@ -1101,6 +1099,12 @@ YY_DECL
 		yy_load_buffer_state( );
 		}
 
+	{
+#line 59 "src/scanner/lex.l"
+
+
+#line 1107 "src/scanner/lex.cpp"
+
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
 		yy_cp = (yy_c_buf_p);
@@ -1118,7 +1122,7 @@ YY_DECL
 yy_match:
 		do
 			{
-			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)];
+			register YY_CHAR yy_c = yy_ec[YY_SC_TO_UI(*yy_cp)] ;
 			if ( yy_accept[yy_current_state] )
 				{
 				(yy_last_accepting_state) = yy_current_state;
@@ -1159,52 +1163,52 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 59 "src/scanner/lex.l"
+#line 61 "src/scanner/lex.l"
 { BEGIN(MACRO); }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 60 "src/scanner/lex.l"
+#line 62 "src/scanner/lex.l"
 { BEGIN(IFILE); }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 61 "src/scanner/lex.l"
+#line 63 "src/scanner/lex.l"
 { startdef(); BEGIN(DEFINE); }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 62 "src/scanner/lex.l"
+#line 64 "src/scanner/lex.l"
 { BEGIN(MACROERROR); }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 63 "src/scanner/lex.l"
+#line 65 "src/scanner/lex.l"
 { BEGIN(MACROIF); }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 64 "src/scanner/lex.l"
+#line 66 "src/scanner/lex.l"
 { BEGIN(MACROIFDEF); }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 65 "src/scanner/lex.l"
+#line 67 "src/scanner/lex.l"
 { BEGIN(MACROIFNDEF); }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 66 "src/scanner/lex.l"
+#line 68 "src/scanner/lex.l"
 { /*decrement a counter, if counter 0, error */ BEGIN(INITIAL); }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 67 "src/scanner/lex.l"
+#line 69 "src/scanner/lex.l"
 { /*if counter 0, error */ BEGIN(IGNOREELSE); }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 70 "src/scanner/lex.l"
+#line 72 "src/scanner/lex.l"
 {
 	{int c;
          while((c=yyinput()) && c!='\n');
@@ -1218,177 +1222,177 @@ YY_RULE_SETUP
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 79 "src/scanner/lex.l"
+#line 81 "src/scanner/lex.l"
 { fprintf(stderr, "%4d bad include line\n", yylineno); yyterminate(); }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 81 "src/scanner/lex.l"
+#line 83 "src/scanner/lex.l"
 { yytext[yyleng-1] = '\0'; setdefid(yytext); define = new deffunc(defid); BEGIN(DEFFUNC); }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 82 "src/scanner/lex.l"
+#line 84 "src/scanner/lex.l"
 { setdefid(yytext); define = new defvar(defid); BEGIN(DEFVAR); }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 84 "src/scanner/lex.l"
+#line 86 "src/scanner/lex.l"
 { BEGIN(DEFVARVAL); }
 	YY_BREAK
 case 15:
 /* rule 15 can match eol */
 YY_RULE_SETUP
-#line 85 "src/scanner/lex.l"
+#line 87 "src/scanner/lex.l"
 { define->val(defval); deftable.insert(define); finishdef(); printdef(); BEGIN(INITIAL); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 86 "src/scanner/lex.l"
+#line 88 "src/scanner/lex.l"
 { appenddefval(yytext); BEGIN(DEFVARVAL); }
 	YY_BREAK
 case 17:
 /* rule 17 can match eol */
 YY_RULE_SETUP
-#line 87 "src/scanner/lex.l"
+#line 89 "src/scanner/lex.l"
 { define->val(defval); deftable.insert(define); finishdef(); printdef(); BEGIN(INITIAL); }
 	YY_BREAK
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 88 "src/scanner/lex.l"
+#line 90 "src/scanner/lex.l"
 { appenddefval("\n"); BEGIN(DEFVARVAL); }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 89 "src/scanner/lex.l"
+#line 91 "src/scanner/lex.l"
 { /* error */ yyterminate(); }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 91 "src/scanner/lex.l"
+#line 93 "src/scanner/lex.l"
 { BEGIN(DEFVARVAL); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 92 "src/scanner/lex.l"
+#line 94 "src/scanner/lex.l"
 { BEGIN(DEFFUNCPARAM); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 93 "src/scanner/lex.l"
+#line 95 "src/scanner/lex.l"
 { ((deffunc *)define)->insertparam(yytext); BEGIN(DEFFUNCPARAM); }
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 94 "src/scanner/lex.l"
+#line 96 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 96 "src/scanner/lex.l"
+#line 98 "src/scanner/lex.l"
 { ((deffunc *)define)->insertparam(yytext); BEGIN(DEFFUNCPARAM); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 97 "src/scanner/lex.l"
+#line 99 "src/scanner/lex.l"
 { BEGIN(DEFFUNCPARAM); }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 98 "src/scanner/lex.l"
+#line 100 "src/scanner/lex.l"
 { BEGIN(DEFVARVAL); }
 	YY_BREAK
 case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
-#line 99 "src/scanner/lex.l"
+#line 101 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 101 "src/scanner/lex.l"
+#line 103 "src/scanner/lex.l"
 { /* evaluate(yytext); */ }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 102 "src/scanner/lex.l"
+#line 104 "src/scanner/lex.l"
 { if( deftable.contains(yytext) ) { /*increment a counter*/ BEGIN(INITIAL); } else BEGIN(IGNOREIF); }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 103 "src/scanner/lex.l"
+#line 105 "src/scanner/lex.l"
 { if( !deftable.contains(yytext) ){ /*increment a counter*/ BEGIN(INITIAL); } else BEGIN(IGNOREIF); }
 	YY_BREAK
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 105 "src/scanner/lex.l"
+#line 107 "src/scanner/lex.l"
 {}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 106 "src/scanner/lex.l"
+#line 108 "src/scanner/lex.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 107 "src/scanner/lex.l"
+#line 109 "src/scanner/lex.l"
 { BEGIN(MACROIF); }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 108 "src/scanner/lex.l"
+#line 110 "src/scanner/lex.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 109 "src/scanner/lex.l"
+#line 111 "src/scanner/lex.l"
 {}
 	YY_BREAK
 case YY_STATE_EOF(IGNOREIF):
-#line 110 "src/scanner/lex.l"
+#line 112 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 112 "src/scanner/lex.l"
+#line 114 "src/scanner/lex.l"
 {}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 113 "src/scanner/lex.l"
+#line 115 "src/scanner/lex.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case YY_STATE_EOF(IGNOREELSE):
-#line 114 "src/scanner/lex.l"
+#line 116 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 116 "src/scanner/lex.l"
+#line 118 "src/scanner/lex.l"
 { }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 117 "src/scanner/lex.l"
+#line 119 "src/scanner/lex.l"
 { defactpidx = 0; startdef(); define = new defvar(deff->getparam(defactpidx)); BEGIN(ACTPARAMDEFFUNC);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 118 "src/scanner/lex.l"
+#line 120 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case YY_STATE_EOF(ACTDEFFUNC):
-#line 119 "src/scanner/lex.l"
+#line 121 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 121 "src/scanner/lex.l"
+#line 123 "src/scanner/lex.l"
 { 
    if(curbs->deffunctable){
       def *d = curbs->deffunctable->get(yytext);
@@ -1401,17 +1405,17 @@ YY_RULE_SETUP
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 129 "src/scanner/lex.l"
+#line 131 "src/scanner/lex.l"
 { appenddefval(yytext); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 130 "src/scanner/lex.l"
+#line 132 "src/scanner/lex.l"
 { definb++;  appenddefval(yytext); }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 131 "src/scanner/lex.l"
+#line 133 "src/scanner/lex.l"
 {
    if(definb>0){
       appenddefval(yytext);
@@ -1432,7 +1436,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 148 "src/scanner/lex.l"
+#line 150 "src/scanner/lex.l"
 {
    if((--definb)<0){
       if( (defactpidx+1)==deff->totalparams() ){
@@ -1453,487 +1457,487 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 166 "src/scanner/lex.l"
+#line 168 "src/scanner/lex.l"
 { }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 167 "src/scanner/lex.l"
+#line 169 "src/scanner/lex.l"
 { BEGIN(MACROERRORSTRING); }
 	YY_BREAK
 case 48:
 /* rule 48 can match eol */
 YY_RULE_SETUP
-#line 168 "src/scanner/lex.l"
+#line 170 "src/scanner/lex.l"
 { BEGIN(INITIAL); }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 169 "src/scanner/lex.l"
+#line 171 "src/scanner/lex.l"
 { /*error*/ yyterminate(); }
 	YY_BREAK
 case 50:
 /* rule 50 can match eol */
 YY_RULE_SETUP
-#line 171 "src/scanner/lex.l"
+#line 173 "src/scanner/lex.l"
 { fprintf(stderr, "%s\n", yytext); }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 172 "src/scanner/lex.l"
+#line 174 "src/scanner/lex.l"
 { BEGIN(MACROERROR); }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 174 "src/scanner/lex.l"
+#line 176 "src/scanner/lex.l"
 { comment(); }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 175 "src/scanner/lex.l"
+#line 177 "src/scanner/lex.l"
 { /* ignore one line comment */ }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 176 "src/scanner/lex.l"
+#line 178 "src/scanner/lex.l"
 { count(); return(AUTO); }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 177 "src/scanner/lex.l"
+#line 179 "src/scanner/lex.l"
 { count(); return(BREAK); }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 178 "src/scanner/lex.l"
+#line 180 "src/scanner/lex.l"
 { count(); return(CASE); }
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 179 "src/scanner/lex.l"
+#line 181 "src/scanner/lex.l"
 { count(); return(CHAR); }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 180 "src/scanner/lex.l"
+#line 182 "src/scanner/lex.l"
 { count(); return(CONST); }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 181 "src/scanner/lex.l"
+#line 183 "src/scanner/lex.l"
 { count(); return(CONTINUE); }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 182 "src/scanner/lex.l"
+#line 184 "src/scanner/lex.l"
 { count(); return(DEFAULT); }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 183 "src/scanner/lex.l"
+#line 185 "src/scanner/lex.l"
 { count(); return(DO); }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 184 "src/scanner/lex.l"
+#line 186 "src/scanner/lex.l"
 { count(); return(DOUBLE); }
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 185 "src/scanner/lex.l"
+#line 187 "src/scanner/lex.l"
 { count(); return(ELSE); }
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 186 "src/scanner/lex.l"
+#line 188 "src/scanner/lex.l"
 { count(); return(ENUM); }
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 187 "src/scanner/lex.l"
+#line 189 "src/scanner/lex.l"
 { count(); return(EXTERN); }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 188 "src/scanner/lex.l"
+#line 190 "src/scanner/lex.l"
 { count(); return(FLOAT); }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 189 "src/scanner/lex.l"
+#line 191 "src/scanner/lex.l"
 { count(); return(FOR); }
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 190 "src/scanner/lex.l"
+#line 192 "src/scanner/lex.l"
 { count(); return(GOTO); }
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 191 "src/scanner/lex.l"
+#line 193 "src/scanner/lex.l"
 { count(); return(IF); }
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 192 "src/scanner/lex.l"
+#line 194 "src/scanner/lex.l"
 { count(); return(INT); }
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 193 "src/scanner/lex.l"
+#line 195 "src/scanner/lex.l"
 { count(); return(LONG); }
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 194 "src/scanner/lex.l"
+#line 196 "src/scanner/lex.l"
 { count(); return(REGISTER); }
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 195 "src/scanner/lex.l"
+#line 197 "src/scanner/lex.l"
 { count(); return(RETURN); }
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 196 "src/scanner/lex.l"
+#line 198 "src/scanner/lex.l"
 { count(); return(SHORT); }
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 197 "src/scanner/lex.l"
+#line 199 "src/scanner/lex.l"
 { count(); return(SIGNED); }
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 198 "src/scanner/lex.l"
+#line 200 "src/scanner/lex.l"
 { count(); return(SIZEOF); }
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 199 "src/scanner/lex.l"
+#line 201 "src/scanner/lex.l"
 { count(); return(STATIC); }
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 200 "src/scanner/lex.l"
+#line 202 "src/scanner/lex.l"
 { count(); return(STRUCT); }
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 201 "src/scanner/lex.l"
+#line 203 "src/scanner/lex.l"
 { count(); return(SWITCH); }
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 202 "src/scanner/lex.l"
+#line 204 "src/scanner/lex.l"
 { count(); return(TYPEDEF); }
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 203 "src/scanner/lex.l"
+#line 205 "src/scanner/lex.l"
 { count(); return(UNION); }
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 204 "src/scanner/lex.l"
+#line 206 "src/scanner/lex.l"
 { count(); return(UNSIGNED); }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 205 "src/scanner/lex.l"
+#line 207 "src/scanner/lex.l"
 { count(); return(VOID); }
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 206 "src/scanner/lex.l"
+#line 208 "src/scanner/lex.l"
 { count(); return(VOLATILE); }
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 207 "src/scanner/lex.l"
+#line 209 "src/scanner/lex.l"
 { count(); return(WHILE); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 209 "src/scanner/lex.l"
-{ if(!check_def()) { count(); return(check_type()); } }
+#line 211 "src/scanner/lex.l"
+{ if(!check_def()) { count(); yylval.lexeme = lexeme(); return(check_type()); } }
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 211 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 213 "src/scanner/lex.l"
+{ count(); yylval.lexeme = lexeme(); return(INTEGER_LITERAL); }
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 212 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 214 "src/scanner/lex.l"
+{ count(); yylval.lexeme = lexeme(); return(INTEGER_LITERAL); }
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 213 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 215 "src/scanner/lex.l"
+{ count(); yylval.lexeme = lexeme(); return(INTEGER_LITERAL); }
 	YY_BREAK
 case 90:
 /* rule 90 can match eol */
 YY_RULE_SETUP
-#line 214 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 216 "src/scanner/lex.l"
+{ count(); yylval.lexeme = lexeme(); return(CHAR_LITERAL); }
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 216 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 218 "src/scanner/lex.l"
+{ count(); return(INTEGER_LITERAL); }
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 217 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 219 "src/scanner/lex.l"
+{ count(); yylval.lexeme = lexeme(); return(FLOAT_LITERAL); }
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 218 "src/scanner/lex.l"
-{ count(); return(CONSTANT); }
+#line 220 "src/scanner/lex.l"
+{ count(); yylval.lexeme = lexeme(); return(FLOAT_LITERAL); }
 	YY_BREAK
 case 94:
 /* rule 94 can match eol */
 YY_RULE_SETUP
-#line 220 "src/scanner/lex.l"
-{ count(); return(STRING_LITERAL); }
+#line 222 "src/scanner/lex.l"
+{ count();  yylval.lexeme = lexeme(); return(STRING_LITERAL); }
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 222 "src/scanner/lex.l"
+#line 224 "src/scanner/lex.l"
 { count(); return(ELLIPSIS); }
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 223 "src/scanner/lex.l"
+#line 225 "src/scanner/lex.l"
 { count(); return(RIGHT_ASSIGN); }
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 224 "src/scanner/lex.l"
+#line 226 "src/scanner/lex.l"
 { count(); return(LEFT_ASSIGN); }
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 225 "src/scanner/lex.l"
+#line 227 "src/scanner/lex.l"
 { count(); return(ADD_ASSIGN); }
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 226 "src/scanner/lex.l"
+#line 228 "src/scanner/lex.l"
 { count(); return(SUB_ASSIGN); }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 227 "src/scanner/lex.l"
+#line 229 "src/scanner/lex.l"
 { count(); return(MUL_ASSIGN); }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 228 "src/scanner/lex.l"
+#line 230 "src/scanner/lex.l"
 { count(); return(DIV_ASSIGN); }
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 229 "src/scanner/lex.l"
+#line 231 "src/scanner/lex.l"
 { count(); return(MOD_ASSIGN); }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 230 "src/scanner/lex.l"
+#line 232 "src/scanner/lex.l"
 { count(); return(AND_ASSIGN); }
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 231 "src/scanner/lex.l"
+#line 233 "src/scanner/lex.l"
 { count(); return(XOR_ASSIGN); }
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 232 "src/scanner/lex.l"
+#line 234 "src/scanner/lex.l"
 { count(); return(OR_ASSIGN); }
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 233 "src/scanner/lex.l"
+#line 235 "src/scanner/lex.l"
 { count(); return(RIGHT_OP); }
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 234 "src/scanner/lex.l"
+#line 236 "src/scanner/lex.l"
 { count(); return(LEFT_OP); }
 	YY_BREAK
 case 108:
 YY_RULE_SETUP
-#line 235 "src/scanner/lex.l"
+#line 237 "src/scanner/lex.l"
 { count(); return(INC_OP); }
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 236 "src/scanner/lex.l"
+#line 238 "src/scanner/lex.l"
 { count(); return(DEC_OP); }
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 237 "src/scanner/lex.l"
+#line 239 "src/scanner/lex.l"
 { count(); return(PTR_OP); }
 	YY_BREAK
 case 111:
 YY_RULE_SETUP
-#line 238 "src/scanner/lex.l"
+#line 240 "src/scanner/lex.l"
 { count(); return(AND_OP); }
 	YY_BREAK
 case 112:
 YY_RULE_SETUP
-#line 239 "src/scanner/lex.l"
+#line 241 "src/scanner/lex.l"
 { count(); return(OR_OP); }
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 240 "src/scanner/lex.l"
+#line 242 "src/scanner/lex.l"
 { count(); return(LE_OP); }
 	YY_BREAK
 case 114:
 YY_RULE_SETUP
-#line 241 "src/scanner/lex.l"
+#line 243 "src/scanner/lex.l"
 { count(); return(GE_OP); }
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 242 "src/scanner/lex.l"
+#line 244 "src/scanner/lex.l"
 { count(); return(EQ_OP); }
 	YY_BREAK
 case 116:
 YY_RULE_SETUP
-#line 243 "src/scanner/lex.l"
+#line 245 "src/scanner/lex.l"
 { count(); return(NE_OP); }
 	YY_BREAK
 case 117:
 YY_RULE_SETUP
-#line 244 "src/scanner/lex.l"
+#line 246 "src/scanner/lex.l"
 { count(); return(';'); }
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 245 "src/scanner/lex.l"
+#line 247 "src/scanner/lex.l"
 { count(); return('{'); }
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 246 "src/scanner/lex.l"
+#line 248 "src/scanner/lex.l"
 { count(); return('}'); }
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 247 "src/scanner/lex.l"
+#line 249 "src/scanner/lex.l"
 { count(); return(','); }
 	YY_BREAK
 case 121:
 YY_RULE_SETUP
-#line 248 "src/scanner/lex.l"
+#line 250 "src/scanner/lex.l"
 { count(); return(':'); }
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 249 "src/scanner/lex.l"
+#line 251 "src/scanner/lex.l"
 { count(); return('='); }
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 250 "src/scanner/lex.l"
+#line 252 "src/scanner/lex.l"
 { count(); return('('); }
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 251 "src/scanner/lex.l"
+#line 253 "src/scanner/lex.l"
 { count(); return(')'); }
 	YY_BREAK
 case 125:
 YY_RULE_SETUP
-#line 252 "src/scanner/lex.l"
+#line 254 "src/scanner/lex.l"
 { count(); return('['); }
 	YY_BREAK
 case 126:
 YY_RULE_SETUP
-#line 253 "src/scanner/lex.l"
+#line 255 "src/scanner/lex.l"
 { count(); return(']'); }
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 254 "src/scanner/lex.l"
+#line 256 "src/scanner/lex.l"
 { count(); return('.'); }
 	YY_BREAK
 case 128:
 YY_RULE_SETUP
-#line 255 "src/scanner/lex.l"
+#line 257 "src/scanner/lex.l"
 { count(); return('&'); }
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 256 "src/scanner/lex.l"
+#line 258 "src/scanner/lex.l"
 { count(); return('!'); }
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 257 "src/scanner/lex.l"
+#line 259 "src/scanner/lex.l"
 { count(); return('~'); }
 	YY_BREAK
 case 131:
 YY_RULE_SETUP
-#line 258 "src/scanner/lex.l"
+#line 260 "src/scanner/lex.l"
 { count(); return('-'); }
 	YY_BREAK
 case 132:
 YY_RULE_SETUP
-#line 259 "src/scanner/lex.l"
+#line 261 "src/scanner/lex.l"
 { count(); return('+'); }
 	YY_BREAK
 case 133:
 YY_RULE_SETUP
-#line 260 "src/scanner/lex.l"
+#line 262 "src/scanner/lex.l"
 { count(); return('*'); }
 	YY_BREAK
 case 134:
 YY_RULE_SETUP
-#line 261 "src/scanner/lex.l"
+#line 263 "src/scanner/lex.l"
 { count(); return('/'); }
 	YY_BREAK
 case 135:
 YY_RULE_SETUP
-#line 262 "src/scanner/lex.l"
+#line 264 "src/scanner/lex.l"
 { count(); return('%'); }
 	YY_BREAK
 case 136:
 YY_RULE_SETUP
-#line 263 "src/scanner/lex.l"
+#line 265 "src/scanner/lex.l"
 { count(); return('<'); }
 	YY_BREAK
 case 137:
 YY_RULE_SETUP
-#line 264 "src/scanner/lex.l"
+#line 266 "src/scanner/lex.l"
 { count(); return('>'); }
 	YY_BREAK
 case 138:
 YY_RULE_SETUP
-#line 265 "src/scanner/lex.l"
+#line 267 "src/scanner/lex.l"
 { count(); return('^'); }
 	YY_BREAK
 case 139:
 YY_RULE_SETUP
-#line 266 "src/scanner/lex.l"
+#line 268 "src/scanner/lex.l"
 { count(); return('|'); }
 	YY_BREAK
 case 140:
 YY_RULE_SETUP
-#line 267 "src/scanner/lex.l"
+#line 269 "src/scanner/lex.l"
 { count(); return('?'); }
 	YY_BREAK
 case 141:
 /* rule 141 can match eol */
 YY_RULE_SETUP
-#line 269 "src/scanner/lex.l"
+#line 271 "src/scanner/lex.l"
 { count(); }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -1950,20 +1954,20 @@ case YY_STATE_EOF(MACROIFDEF):
 case YY_STATE_EOF(MACROIFNDEF):
 case YY_STATE_EOF(MACROERROR):
 case YY_STATE_EOF(MACROERRORSTRING):
-#line 271 "src/scanner/lex.l"
+#line 273 "src/scanner/lex.l"
 { if ( !popfile() ) { yyterminate(); if(deffunctable){ delete deffunctable; deff = NULL; deffunctable = NULL; } } }
 	YY_BREAK
 case 142:
 YY_RULE_SETUP
-#line 272 "src/scanner/lex.l"
+#line 274 "src/scanner/lex.l"
 { /* ignore bad characters */ }
 	YY_BREAK
 case 143:
 YY_RULE_SETUP
-#line 274 "src/scanner/lex.l"
+#line 276 "src/scanner/lex.l"
 ECHO;
 	YY_BREAK
-#line 1967 "src/scanner/lex.cpp"
+#line 1971 "src/scanner/lex.cpp"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -2092,6 +2096,7 @@ ECHO;
 			"fatal flex scanner internal error--no action found" );
 	} /* end of action switch */
 		} /* end of scanning one token */
+	} /* end of user's declarations */
 } /* end of yylex */
 
 /* yy_get_next_buffer - try to read in a new buffer
@@ -2147,21 +2152,21 @@ static int yy_get_next_buffer (void)
 
 	else
 		{
-			int num_to_read =
+			yy_size_t num_to_read =
 			YY_CURRENT_BUFFER_LVALUE->yy_buf_size - number_to_move - 1;
 
 		while ( num_to_read <= 0 )
 			{ /* Not enough room in the buffer - grow it. */
 
 			/* just a shorter name for the current buffer */
-			YY_BUFFER_STATE b = YY_CURRENT_BUFFER;
+			YY_BUFFER_STATE b = YY_CURRENT_BUFFER_LVALUE;
 
 			int yy_c_buf_p_offset =
 				(int) ((yy_c_buf_p) - b->yy_ch_buf);
 
 			if ( b->yy_is_our_buffer )
 				{
-				int new_size = b->yy_buf_size * 2;
+				yy_size_t new_size = b->yy_buf_size * 2;
 
 				if ( new_size <= 0 )
 					b->yy_buf_size += b->yy_buf_size / 8;
@@ -2192,7 +2197,7 @@ static int yy_get_next_buffer (void)
 
 		/* Read in more data. */
 		YY_INPUT( (&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move]),
-			(yy_n_chars), (size_t) num_to_read );
+			(yy_n_chars), num_to_read );
 
 		YY_CURRENT_BUFFER_LVALUE->yy_n_chars = (yy_n_chars);
 		}
@@ -2288,7 +2293,7 @@ static int yy_get_next_buffer (void)
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 	yy_is_jam = (yy_current_state == 398);
 
-	return yy_is_jam ? 0 : yy_current_state;
+		return yy_is_jam ? 0 : yy_current_state;
 }
 
     static void yyunput (int c, register char * yy_bp )
@@ -2303,7 +2308,7 @@ static int yy_get_next_buffer (void)
 	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
 		{ /* need to shift things up to make room */
 		/* +2 for EOB chars. */
-		register int number_to_move = (yy_n_chars) + 2;
+		register yy_size_t number_to_move = (yy_n_chars) + 2;
 		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
 					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
 		register char *source =
@@ -2352,7 +2357,7 @@ static int yy_get_next_buffer (void)
 
 		else
 			{ /* need more input */
-			int offset = (yy_c_buf_p) - (yytext_ptr);
+			yy_size_t offset = (yy_c_buf_p) - (yytext_ptr);
 			++(yy_c_buf_p);
 
 			switch ( yy_get_next_buffer(  ) )
@@ -2514,10 +2519,6 @@ static void yy_load_buffer_state  (void)
 	yyfree((void *) b  );
 }
 
-#ifndef __cplusplus
-extern int isatty (int );
-#endif /* __cplusplus */
-    
 /* Initializes or reinitializes a buffer.
  * This function is sometimes called more than once on the same buffer,
  * such as during a yyrestart() or at EOF.
@@ -2630,7 +2631,7 @@ void yypop_buffer_state (void)
  */
 static void yyensure_buffer_stack (void)
 {
-	int num_to_alloc;
+	yy_size_t num_to_alloc;
     
 	if (!(yy_buffer_stack)) {
 
@@ -2727,12 +2728,12 @@ YY_BUFFER_STATE yy_scan_string (yyconst char * yystr )
  * 
  * @return the newly allocated buffer state object.
  */
-YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, int  _yybytes_len )
+YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len )
 {
 	YY_BUFFER_STATE b;
 	char *buf;
 	yy_size_t n;
-	int i;
+	yy_size_t i;
     
 	/* Get memory for full buffer, including space for trailing EOB's. */
 	n = _yybytes_len + 2;
@@ -2814,7 +2815,7 @@ FILE *yyget_out  (void)
 /** Get the length of the current token.
  * 
  */
-int yyget_leng  (void)
+yy_size_t yyget_leng  (void)
 {
         return yyleng;
 }
@@ -2962,7 +2963,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 274 "src/scanner/lex.l"
+#line 275 "src/scanner/lex.l"
 
 
 
@@ -3011,6 +3012,13 @@ void count()
 	ECHO;
 }
 
+char *lexeme()
+{
+   char * lexeme = new char[yyleng + 1];
+   strcpy(lexeme, yytext);   
+   return lexeme;
+   //return yytext;
+}
 
 int check_type()
 {
@@ -3026,7 +3034,6 @@ int check_type()
 /*
 *	it actually will only return IDENTIFIER
 */
-
 	return(IDENTIFIER);
 }
 

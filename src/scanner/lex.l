@@ -29,6 +29,8 @@ void comment();
 int check_type();
 int check_def();
 
+char * lexeme();
+
 %}
 
 D			[0-9]
@@ -206,18 +208,18 @@ IS			(u|U|l|L)*
 "volatile"		{ count(); return(VOLATILE); }
 "while"			{ count(); return(WHILE); }
 
-{L}({L}|{D})*		{ if(!check_def()) { count(); return(check_type()); } }
+{L}({L}|{D})*		{ if(!check_def()) { count(); yylval.lexeme = lexeme(); return(check_type()); } }
 
-0[xX]{H}+{IS}?		{ count(); return(CONSTANT); }
-0{D}+{IS}?		{ count(); return(CONSTANT); }
-{D}+{IS}?		{ count(); return(CONSTANT); }
-L?'(\\.|[^\\'])+'	{ count(); return(CONSTANT); }
+0[xX]{H}+{IS}?		{ count(); yylval.lexeme = lexeme(); return(INTEGER_LITERAL); }
+0{D}+{IS}?		{ count(); yylval.lexeme = lexeme(); return(INTEGER_LITERAL); }
+{D}+{IS}?		{ count(); yylval.lexeme = lexeme(); return(INTEGER_LITERAL); }
+L?'(\\.|[^\\'])+'	{ count(); yylval.lexeme = lexeme(); return(CHAR_LITERAL); }
 
-{D}+{E}{FS}?		{ count(); return(CONSTANT); }
-{D}*"."{D}+({E})?{FS}?	{ count(); return(CONSTANT); }
-{D}+"."{D}*({E})?{FS}?	{ count(); return(CONSTANT); }
+{D}+{E}{FS}?		{ count(); return(INTEGER_LITERAL); }
+{D}*"."{D}+({E})?{FS}?	{ count(); yylval.lexeme = lexeme(); return(FLOAT_LITERAL); }
+{D}+"."{D}*({E})?{FS}?	{ count(); yylval.lexeme = lexeme(); return(FLOAT_LITERAL); }
 
-L?\"(\\.|[^\\"])*\"	{ count(); return(STRING_LITERAL); }
+L?\"(\\.|[^\\"])*\"	{ count();  yylval.lexeme = lexeme(); return(STRING_LITERAL); }
 
 "..."			{ count(); return(ELLIPSIS); }
 ">>="			{ count(); return(RIGHT_ASSIGN); }
@@ -318,6 +320,13 @@ void count()
 	ECHO;
 }
 
+char *lexeme()
+{
+   char * lexeme = new char[yyleng + 1];
+   strcpy(lexeme, yytext);   
+   return lexeme;
+   //return yytext;
+}
 
 int check_type()
 {
@@ -333,7 +342,6 @@ int check_type()
 /*
 *	it actually will only return IDENTIFIER
 */
-
 	return(IDENTIFIER);
 }
 

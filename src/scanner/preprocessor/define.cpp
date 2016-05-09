@@ -61,7 +61,7 @@ void printdef()
           if(i<(countp-1)) printf(", ");
       }
    }
-   printf(" {\n", define->id());
+   printf(" {\n");
    printf("%s\n}\n*/\n", define->val());
 }
 

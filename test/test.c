@@ -7,7 +7,7 @@
    x += BLA; \
    x += 3
   
-#define _RUIMDOWS
+//#define _RUIMDOWS
 
 #define FUNC( X, Y, Z ) X = Y + Z
 

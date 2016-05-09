@@ -1,5 +1,10 @@
+%code requires
+{
+#include "../ast/ast.h"
+}
 
 %{
+#include <stdio.h>
 
 // Analisador léxico que será chamado pelo Parser.
 int yylex();
@@ -9,8 +14,21 @@ void yyerror(const char *);
  
 %}
 
+%union {
+    //bool    bool_value;
+    //int     int_value;
+    //long    long_value;
+    //float   float_value;
+    //double  double_value;
+    //char *  str_value;
+    //char *  identifier;
+    char *  lexeme;
+    
+    ExpressionNode *expression;
+}
 
-%token IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
+%token <lexeme> IDENTIFIER STRING_LITERAL INTEGER_LITERAL CHAR_LITERAL FLOAT_LITERAL
+%token SIZEOF
 %token PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
 %token AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
 %token SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
@@ -22,67 +40,109 @@ void yyerror(const char *);
 
 %token CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
 
+%type <lexeme> unary_operator
+%type <expression> primary_expression postfix_expression unary_expression cast_expression multiplicative_expression additive_expression expression
+
 %start translation_unit
 %%
 
 primary_expression
-	: IDENTIFIER
-	| CONSTANT
-	| STRING_LITERAL
-	| '(' expression ')'
-	;
+	: IDENTIFIER {
+	   IdentifierNode *idNode = new IdentifierNode($1);
+	   $$ = idNode;
+}	| CHAR_LITERAL {
+	   CharLiteralNode *charLiteral = new CharLiteralNode($1);
+	   $$ = charLiteral;
+}	| INTEGER_LITERAL {
+	   IntegerLiteralNode *intLiteral = new IntegerLiteralNode($1);
+	   $$ = intLiteral;
+}	| FLOAT_LITERAL {
+	   FloatLiteralNode *floatLiteral = new FloatLiteralNode($1);
+	   $$ = floatLiteral;
+}	| STRING_LITERAL {
+	   StringLiteralNode *stringLiteral = new StringLiteralNode($1);
+	   $$ = stringLiteral;
+}	| '(' expression ')' {
+	   $$ = $2;
+}	;
 
 postfix_expression
-	: primary_expression
-	| postfix_expression '[' expression ']'
-	| postfix_expression '(' ')'
+	: primary_expression {
+	   $$ = $1;
+}
+	| postfix_expression '[' expression ']' {
+      $$ = NULL;   
+}	| postfix_expression '(' ')'
 	| postfix_expression '(' argument_expression_list ')'
 	| postfix_expression '.' IDENTIFIER
 	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP
-	| postfix_expression DEC_OP
-	;
+	| postfix_expression INC_OP {
+   	PostUnaryExpressionNode *node = new PostUnaryExpressionNode($1, "++");
+   	$$ = node;
+}	| postfix_expression DEC_OP {
+   	PostUnaryExpressionNode *node = new PostUnaryExpressionNode($1, "--");
+   	$$ = node;
+}	;
 
 argument_expression_list
-	: assignment_expression
+	: assignment_expression { $$ = $1; }
 	| argument_expression_list ',' assignment_expression
 	;
 
 unary_expression
-	: postfix_expression
-	| INC_OP unary_expression
-	| DEC_OP unary_expression
-	| unary_operator cast_expression
-	| SIZEOF unary_expression
-	| SIZEOF '(' type_name ')'
-	;
+	: postfix_expression { $$ = $1; }
+	| INC_OP unary_expression {
+   	PreUnaryExpressionNode *node = new PreUnaryExpressionNode("++", $1);
+   	$$ = node;
+}	| DEC_OP unary_expression {
+   	PreUnaryExpressionNode *node = new PreUnaryExpressionNode("--", $1);
+   	$$ = node;
+}	| unary_operator cast_expression {
+   	PreUnaryExpressionNode *node = new PreUnaryExpressionNode($1, $2);
+   	$$ = node;
+}	| SIZEOF unary_expression {
+      $$ = NULL;
+}	| SIZEOF '(' type_name ')' {
+      $$ = NULL;
+}	;
 
 unary_operator
-	: '&'
-	| '*'
-	| '+'
-	| '-'
-	| '~'
-	| '!'
+	: '&' { $$ = "&"; }
+	| '*' { $$ = "*"; }
+	| '+' { $$ = "+"; }
+	| '-' { $$ = "-"; }
+	| '~' { $$ = "~"; }
+	| '!' { $$ = "!"; }
 	;
 
 cast_expression
-	: unary_expression
-	| '(' type_name ')' cast_expression
-	;
+	: unary_expression { $$ = $1; }
+	| '(' type_name ')' cast_expression {
+	   $$ = NULL;
+}	;
 
 multiplicative_expression
 	: cast_expression
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
-	;
+	| multiplicative_expression '*' cast_expression {
+   	BinaryExpressionNode *node = new BinaryExpressionNode($1,"*",$3);
+   	$$ = node;
+}	| multiplicative_expression '/' cast_expression {
+   	BinaryExpressionNode *node = new BinaryExpressionNode($1,"/",$3);
+   	$$ = node;
+}	| multiplicative_expression '%' cast_expression {
+   	BinaryExpressionNode *node = new BinaryExpressionNode($1,"%",$3);
+   	$$ = node;
+}	;
 
 additive_expression
 	: multiplicative_expression
-	| additive_expression '+' multiplicative_expression
-	| additive_expression '-' multiplicative_expression
-	;
+	| additive_expression '+' multiplicative_expression {
+   	BinaryExpressionNode *node = new BinaryExpressionNode($1,"+",$3);
+   	$$ = node;
+}	| additive_expression '-' multiplicative_expression {
+	   BinaryExpressionNode *node = new BinaryExpressionNode($1,"-",$3);
+   	$$ = node;	
+}	;
 
 shift_expression
 	: additive_expression
@@ -154,8 +214,12 @@ assignment_operator
 	;
 
 expression
-	: assignment_expression
-	| expression ',' assignment_expression
+	: assignment_expression {
+      $$ = NULL;
+}
+	| expression ',' assignment_expression {
+      $$ = NULL;
+}
 	;
 
 constant_expression
