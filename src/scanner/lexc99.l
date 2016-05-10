@@ -40,8 +40,6 @@ E			[Ee][+-]?{D}+
 FS			(f|F|l|L)
 IS			(u|U|l|L)*
 
-
-
 %option noyywrap
 %x IFILE
 %x MACRO
@@ -271,7 +269,7 @@ L?\"(\\.|[^\\"])*\"	{ count();  yylval.lexeme = lexeme(); return(STRING_LITERAL)
 [ \t\v\n\f]		{ count(); }
 
 <<EOF>>			{ if ( !popfile() ) { yyterminate(); if(deffunctable){ delete deffunctable; deff = NULL; deffunctable = NULL; } } }
-.			{ /* ignore bad characters */ }
+.			{ count(); /* ignore bad characters */ }
 
 %%
 

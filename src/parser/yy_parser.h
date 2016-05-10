@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 2 "src/parser/yacc.y" /* yacc.c:1909  */
+#line 2 "src/parser/yaccc11.y" /* yacc.c:1909  */
 
 #include "../ast/ast.h"
 
@@ -52,10 +52,10 @@ extern int yydebug;
   enum yytokentype
   {
     IDENTIFIER = 258,
-    STRING_LITERAL = 259,
-    INTEGER_LITERAL = 260,
-    CHAR_LITERAL = 261,
-    FLOAT_LITERAL = 262,
+    I_CONSTANT = 259,
+    F_CONSTANT = 260,
+    STRING_LITERAL = 261,
+    FUNC_NAME = 262,
     SIZEOF = 263,
     PTR_OP = 264,
     INC_OP = 265,
@@ -78,39 +78,52 @@ extern int yydebug;
     AND_ASSIGN = 282,
     XOR_ASSIGN = 283,
     OR_ASSIGN = 284,
-    TYPE_NAME = 285,
-    TYPEDEF = 286,
-    EXTERN = 287,
-    STATIC = 288,
-    AUTO = 289,
-    REGISTER = 290,
-    CHAR = 291,
-    SHORT = 292,
-    INT = 293,
-    LONG = 294,
-    SIGNED = 295,
-    UNSIGNED = 296,
-    FLOAT = 297,
-    DOUBLE = 298,
-    CONST = 299,
-    VOLATILE = 300,
-    VOID = 301,
-    STRUCT = 302,
-    UNION = 303,
-    ENUM = 304,
-    ELLIPSIS = 305,
-    CASE = 306,
-    DEFAULT = 307,
-    IF = 308,
-    ELSE = 309,
-    SWITCH = 310,
-    WHILE = 311,
-    DO = 312,
-    FOR = 313,
-    GOTO = 314,
-    CONTINUE = 315,
-    BREAK = 316,
-    RETURN = 317
+    TYPEDEF_NAME = 285,
+    ENUMERATION_CONSTANT = 286,
+    TYPEDEF = 287,
+    EXTERN = 288,
+    STATIC = 289,
+    AUTO = 290,
+    REGISTER = 291,
+    INLINE = 292,
+    CONST = 293,
+    RESTRICT = 294,
+    VOLATILE = 295,
+    BOOL = 296,
+    CHAR = 297,
+    SHORT = 298,
+    INT = 299,
+    LONG = 300,
+    SIGNED = 301,
+    UNSIGNED = 302,
+    FLOAT = 303,
+    DOUBLE = 304,
+    VOID = 305,
+    COMPLEX = 306,
+    IMAGINARY = 307,
+    STRUCT = 308,
+    UNION = 309,
+    ENUM = 310,
+    ELLIPSIS = 311,
+    CASE = 312,
+    DEFAULT = 313,
+    IF = 314,
+    ELSE = 315,
+    SWITCH = 316,
+    WHILE = 317,
+    DO = 318,
+    FOR = 319,
+    GOTO = 320,
+    CONTINUE = 321,
+    BREAK = 322,
+    RETURN = 323,
+    ALIGNAS = 324,
+    ALIGNOF = 325,
+    ATOMIC = 326,
+    GENERIC = 327,
+    NORETURN = 328,
+    STATIC_ASSERT = 329,
+    THREAD_LOCAL = 330
   };
 #endif
 
@@ -119,7 +132,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 17 "src/parser/yacc.y" /* yacc.c:1909  */
+#line 17 "src/parser/yaccc11.y" /* yacc.c:1909  */
 
     //bool    bool_value;
     //int     int_value;
@@ -131,8 +144,9 @@ union YYSTYPE
     char *  lexeme;
     
     ExpressionNode *expression;
+    StatementNode *statement;
 
-#line 136 "src/parser/yy_parser.h" /* yacc.c:1909  */
+#line 150 "src/parser/yy_parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

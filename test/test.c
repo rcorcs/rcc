@@ -44,12 +44,14 @@ void main()
    printf("%d\n", _A_);
    printf("%d\n", FUNCB(2));
    printf("%d\n", FUNCA(2));
+
 }
 
 
 
 int func()
 <%
+   int a = 5;
    return 5;
 %>
 
