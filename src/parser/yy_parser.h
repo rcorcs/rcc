@@ -40,7 +40,7 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 2 "src/parser/yaccc11.y" /* yacc.c:1909  */
+#line 2 "src/parser/yacc_c11.y" /* yacc.c:1909  */
 
 #include "../ast/ast.h"
 
@@ -132,7 +132,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 17 "src/parser/yaccc11.y" /* yacc.c:1909  */
+#line 18 "src/parser/yacc_c11.y" /* yacc.c:1909  */
 
     //bool    bool_value;
     //int     int_value;
@@ -142,11 +142,13 @@ union YYSTYPE
     //char *  str_value;
     //char *  identifier;
     char *  lexeme;
-    
+
+    TypeNode *type;
     ExpressionNode *expression;
     StatementNode *statement;
+    DeclarationNode *declaration;
 
-#line 150 "src/parser/yy_parser.h" /* yacc.c:1909  */
+#line 152 "src/parser/yy_parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

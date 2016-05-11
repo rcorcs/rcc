@@ -5,6 +5,7 @@
 
 %{
 #include <stdio.h>
+#include <string.h>
 
 // Analisador léxico que será chamado pelo Parser.
 int yylex();
@@ -23,9 +24,11 @@ void yyerror(const char *);
     //char *  str_value;
     //char *  identifier;
     char *  lexeme;
-    
+
+    TypeNode *type;
     ExpressionNode *expression;
     StatementNode *statement;
+    DeclarationNode *declaration;
 }
 
 
@@ -47,7 +50,8 @@ void yyerror(const char *);
 
 %token	ALIGNAS ALIGNOF ATOMIC GENERIC NORETURN STATIC_ASSERT THREAD_LOCAL
 
-%type <lexeme> unary_operator assignment_operator
+%type <lexeme> unary_operator assignment_operator struct_or_union
+
 %type <expression> primary_expression constant enumeration_constant string
 %type <expression> postfix_expression unary_expression cast_expression
 %type <expression> multiplicative_expression additive_expression shift_expression
@@ -58,10 +62,20 @@ void yyerror(const char *);
 %type <expression> argument_expression_list
 %type <expression> constant_expression
 %type <expression> generic_selection
-%type <expression> expression_statement
 
-%type <statement> statement
-%type <statement> jump_statement selection_statement iteration_statement
+%type <statement> statement compound_statement
+                  jump_statement selection_statement iteration_statement
+                  block_item_list block_item expression_statement
+                  labeled_statement
+
+%type <declaration> declaration init_declarator_list init_declarator declarator
+                    direct_declarator
+                    initializer
+                    struct_declaration_list struct_declaration
+                    struct_declarator_list struct_declarator
+	
+%type <type> type_specifier struct_or_union_specifier declaration_specifiers
+             type_qualifier function_specifier specifier_qualifier_list
 
 %start translation_unit
 %%
@@ -325,24 +339,42 @@ declaration
 declaration_specifiers
 	: storage_class_specifier declaration_specifiers
 	| storage_class_specifier
-	| type_specifier declaration_specifiers
-	| type_specifier
-	| type_qualifier declaration_specifiers
-	| type_qualifier
-	| function_specifier declaration_specifiers
-	| function_specifier
-	| alignment_specifier declaration_specifiers
+	| type_specifier declaration_specifiers {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
+	   $$ = node;
+}	| type_specifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	| type_qualifier declaration_specifiers {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
+	   $$ = node;
+}	| type_qualifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	| function_specifier declaration_specifiers {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
+	   $$ = node;
+}	| function_specifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	| alignment_specifier declaration_specifiers
 	| alignment_specifier
 	;
 
 init_declarator_list
-	: init_declarator
-	| init_declarator_list ',' init_declarator
-	;
+	: init_declarator {
+	   DeclarationListNode *node = new DeclarationListNode($1, NULL);
+	   $$ = node;
+}	| init_declarator_list ',' init_declarator {
+	   DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
+	   $$ = node;
+}	;
 
 init_declarator
-	: declarator '=' initializer
-	| declarator
+	: declarator '=' initializer {
+	   AssignmentNode *node = new AssignmentNode($1, $3);
+	   $$ = node;
+}	| declarator { $$ = $1; }
 	;
 
 storage_class_specifier
@@ -355,63 +387,136 @@ storage_class_specifier
 	;
 
 type_specifier
-	: VOID
-	| CHAR
-	| SHORT
-	| INT
-	| LONG
-	| FLOAT
-	| DOUBLE
-	| SIGNED
-	| UNSIGNED
-	| BOOL
-	| COMPLEX
-	| IMAGINARY	  	/* non-mandated extension */
-	| atomic_type_specifier
-	| struct_or_union_specifier
+	: VOID {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_VOID);
+	   $$ = node;
+}	| CHAR {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_CHAR);
+	   $$ = node;
+}	| SHORT {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_SHORT);
+	   $$ = node;
+}	| INT {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_INT);
+	   $$ = node;
+}	| LONG {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_LONG);
+	   $$ = node;
+}	| FLOAT {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_FLOAT);
+	   $$ = node;
+}	| DOUBLE {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_DOUBLE);
+	   $$ = node;
+}	| SIGNED {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_SIGNED);
+	   $$ = node;
+}	| UNSIGNED {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_UNSIGNED);
+	   $$ = node;
+}	| BOOL {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_BOOL);
+	   $$ = node;
+}	| COMPLEX {
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_COMPLEX);
+	   $$ = node;
+}	| IMAGINARY {	  	/* non-mandated extension */
+	   PrimitiveTypeNode *node = new PrimitiveTypeNode(TYPE_IMAGINARY);
+	   $$ = node;
+}	| atomic_type_specifier
+	| struct_or_union_specifier { $$ = $1; }
 	| enum_specifier
 	| TYPEDEF_NAME		/* after it has been defined as such */
 	;
 
 struct_or_union_specifier
-	: struct_or_union '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER '{' struct_declaration_list '}'
-	| struct_or_union IDENTIFIER
-	;
+	: struct_or_union '{' struct_declaration_list '}' {
+      TypeNode *node = NULL;
+      if(strcmp($1,"struct")==0){
+         node = new StructTypeNode("", $3);
+      }else if(strcmp($1,"union")==0){
+         node = new UnionTypeNode("", $3);
+      }
+      $$ = node;    
+}	| struct_or_union IDENTIFIER '{' struct_declaration_list '}' {
+      TypeNode *node = NULL;
+      if(strcmp($1,"struct")==0){
+         node = new StructTypeNode($2, $4);
+      }else if(strcmp($1,"union")==0){
+         node = new UnionTypeNode($2, $4);
+      }
+      $$ = node;      
+}	| struct_or_union IDENTIFIER {
+      TypeNode *node = NULL;
+      if(strcmp($1,"struct")==0){
+         node = new StructTypeNode($2, NULL);
+      }else if(strcmp($1,"union")==0){
+         node = new UnionTypeNode($2, NULL);
+      }
+      $$ = node;
+}	;
 
 struct_or_union
-	: STRUCT
-	| UNION
+	: STRUCT { $$ = (char*)"struct"; }
+	| UNION { $$ = (char*)"union"; }
 	;
 
 struct_declaration_list
-	: struct_declaration
-	| struct_declaration_list struct_declaration
-	;
+	: struct_declaration {
+      DeclarationSequenceNode *node = new DeclarationSequenceNode($1, NULL);
+      $$ = node;
+}	| struct_declaration_list struct_declaration {
+      DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
+      $$ = node;
+}	;
 
 struct_declaration
-	: specifier_qualifier_list ';'	/* for anonymous struct/union */
-	| specifier_qualifier_list struct_declarator_list ';'
-	| static_assert_declaration
+	: specifier_qualifier_list ';' {	/* for anonymous struct/union */
+	   AttributeDeclarationNode *node = new AttributeDeclarationNode($1, NULL, NULL);
+	   $$ = node;
+}	| specifier_qualifier_list struct_declarator_list ';' {
+      TypeNode *type = $1;
+	   DeclarationListNode *node = (DeclarationListNode*)$2;
+	   //TODO set type into node
+	   $$ = node;
+}	| static_assert_declaration { $$ = NULL; }
 	;
 
 specifier_qualifier_list
-	: type_specifier specifier_qualifier_list
-	| type_specifier
-	| type_qualifier specifier_qualifier_list
-	| type_qualifier
-	;
+	: type_specifier specifier_qualifier_list {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
+	   $$ = node;
+}	| type_specifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	| type_qualifier specifier_qualifier_list {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
+	   $$ = node;
+}	| type_qualifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	;
 
 struct_declarator_list
-	: struct_declarator
-	| struct_declarator_list ',' struct_declarator
-	;
+	: struct_declarator {
+	   DeclarationListNode *node = new DeclarationListNode($1, NULL);
+	   $$ = node;
+}	| struct_declarator_list ',' struct_declarator {
+	   DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
+	   $$ = node;
+}	;
 
 struct_declarator
-	: ':' constant_expression
-	| declarator ':' constant_expression
-	| declarator
-	;
+	: ':' constant_expression {
+	   AttributeDeclarationNode *node = new AttributeDeclarationNode(NULL, NULL, $2);
+	   $$ = node;
+}	| declarator ':' constant_expression {
+	   AttributeDeclarationNode *node = new AttributeDeclarationNode(NULL, (DeclaratorNode *)$1, $3);
+	   $$ = node;
+}	| declarator {
+	   AttributeDeclarationNode *node = new AttributeDeclarationNode(NULL, (DeclaratorNode *)$1, NULL);
+	   $$ = node;
+}	;
 
 enum_specifier
 	: ENUM '{' enumerator_list '}'
@@ -436,16 +541,28 @@ atomic_type_specifier
 	;
 
 type_qualifier
-	: CONST
-	| RESTRICT
-	| VOLATILE
-	| ATOMIC
-	;
+	: CONST {
+	   QualifierTypeNode *node = new QualifierTypeNode(TYPE_CONST);
+	   $$ = node;
+}	| RESTRICT {
+	   QualifierTypeNode *node = new QualifierTypeNode(TYPE_RESTRICT);
+	   $$ = node;
+}	| VOLATILE {
+	   QualifierTypeNode *node = new QualifierTypeNode(TYPE_VOLATILE);
+	   $$ = node;
+}	| ATOMIC {
+	   QualifierTypeNode *node = new QualifierTypeNode(TYPE_ATOMIC);
+	   $$ = node;
+}	;
 
 function_specifier
-	: INLINE
-	| NORETURN
-	;
+	: INLINE {
+	   FunctionSpecifierNode *node = new FunctionSpecifierNode(TYPE_INLINE);
+	   $$ = node;
+}	| NORETURN {
+      FunctionSpecifierNode *node = new FunctionSpecifierNode(TYPE_NORETURN);
+	   $$ = node;
+}	;
 
 alignment_specifier
 	: ALIGNAS '(' type_name ')'
@@ -453,13 +570,20 @@ alignment_specifier
 	;
 
 declarator
-	: pointer direct_declarator
-	| direct_declarator
-	;
+	: pointer direct_declarator {
+	   //TODO pointer???
+	   DeclaratorNode *node = new DeclaratorNode($2);
+	   $$ = node;
+}	| direct_declarator {
+	   DeclaratorNode *node = new DeclaratorNode($1);
+	   $$ = node;
+}	;
 
 direct_declarator
-	: IDENTIFIER
-	| '(' declarator ')'
+	: IDENTIFIER {
+      IdentifierDeclarationNode *node = new IdentifierDeclarationNode($1);
+      $$ = node;
+}	| '(' declarator ')' { $$ = $2; }
 	| direct_declarator '[' ']'
 	| direct_declarator '[' '*' ']'
 	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
@@ -575,39 +699,53 @@ static_assert_declaration
 	;
 
 statement
-	: labeled_statement
-	| compound_statement
-	| expression_statement
-	| selection_statement
-	| iteration_statement
-	| jump_statement
+	: labeled_statement { $$ = $1; }
+	| compound_statement { $$ = $1; }
+	| expression_statement { $$ = $1; }
+	| selection_statement { $$ = $1; }
+	| iteration_statement { $$ = $1; }
+	| jump_statement { $$ = $1; }
 	;
 
 labeled_statement
-	: IDENTIFIER ':' statement
-	| CASE constant_expression ':' statement
-	| DEFAULT ':' statement
-	;
+	: IDENTIFIER ':' statement {
+	   LabeledStatementNode *node = new LabeledStatementNode($1, $3);
+	   $$ = node;
+}	| CASE constant_expression ':' statement {
+	   CaseStatementNode *node = new CaseStatementNode($2, $4);
+	   $$ = node;
+}	| DEFAULT ':' statement {
+	   CaseStatementNode *node = new CaseStatementNode(NULL, $3);
+	   $$ = node;
+}	;
 
 compound_statement
-	: '{' '}'
-	| '{'  block_item_list '}'
+	: '{' '}' { $$ = NULL; }
+	| '{'  block_item_list '}' { $$ = $2; }
 	;
 
 block_item_list
-	: block_item
-	| block_item_list block_item
-	;
+	: block_item {
+	   CompoundStatementNode *node = new CompoundStatementNode($1, NULL);
+	   $$ = node;
+}	| block_item_list block_item {
+	   CompoundStatementNode *node = new CompoundStatementNode($2, (CompoundStatementNode *)$1);
+	   $$ = node;
+}	;
 
 block_item
-	: declaration
-	| statement
+	: declaration {
+	   DeclarationStatementNode *node = new DeclarationStatementNode($1);
+	   $$ = node;
+}	| statement { $$ = $1; }
 	;
 
 expression_statement
 	: ';' { $$ = NULL; }
-	| expression ';' { $$ = $1; }
-	;
+	| expression ';' { 
+	   ExpressionStatementNode *node = new ExpressionStatementNode($1);
+	   $$ = node;
+}	;
 
 selection_statement
 	: IF '(' expression ')' statement ELSE statement {
@@ -628,12 +766,21 @@ iteration_statement
 }	| DO statement WHILE '(' expression ')' ';' {
       DoWhileNode *node = new DoWhileNode($2, $5);
       $$ = node;
-}	| FOR '(' expression_statement expression_statement ')' statement
-	| FOR '(' expression_statement expression_statement expression ')' statement {
-      //ForNode *node = new ForNode($3, $4, $5, $7);
-}	| FOR '(' declaration expression_statement ')' statement
-	| FOR '(' declaration expression_statement expression ')' statement
-	;
+}	| FOR '(' expression_statement expression_statement ')' statement {
+      ForNode *node = new ForNode($3, (ExpressionStatementNode*)$4, NULL, $6);
+      $$ = node;
+}	| FOR '(' expression_statement expression_statement expression ')' statement {
+      ForNode *node = new ForNode($3, (ExpressionStatementNode*)$4, $5, $7);
+      $$ = node;
+}	| FOR '(' declaration expression_statement ')' statement {
+      DeclarationStatementNode *init = new DeclarationStatementNode($3);
+      ForNode *node = new ForNode(init,(ExpressionStatementNode*) $4, NULL, $6);
+      $$ = node;
+}	| FOR '(' declaration expression_statement expression ')' statement {
+      DeclarationStatementNode *init = new DeclarationStatementNode($3);
+      ForNode *node = new ForNode(init, (ExpressionStatementNode*)$4, $5, $7);
+      $$ = node;
+}	;
 
 jump_statement
 	: GOTO IDENTIFIER ';' {

@@ -1951,7 +1951,7 @@ YY_RULE_SETUP
 case 99:
 YY_RULE_SETUP
 #line 256 "src/scanner/lexc11.l"
-{ count(); if(!check_def()) {  yylval.lexeme = lexeme(); return check_type(); } }
+{ count(); if(!check_def()) { yylval.lexeme = lexeme(); return check_type(); } }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP

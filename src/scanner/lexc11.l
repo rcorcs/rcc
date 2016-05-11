@@ -253,7 +253,7 @@ WS  [ \t\v\n\f]
 "_Thread_local"                         { count(); return THREAD_LOCAL; }
 "__func__"                              { count(); return FUNC_NAME; }
 
-{L}{A}*					{ count(); if(!check_def()) {  yylval.lexeme = lexeme(); return check_type(); } }
+{L}{A}*					{ count(); if(!check_def()) { yylval.lexeme = lexeme(); return check_type(); } }
 
 {HP}{H}+{IS}?				{ count(); yylval.lexeme = lexeme(); return I_CONSTANT; }
 {NZ}{D}*{IS}?				{ count(); yylval.lexeme = lexeme(); return I_CONSTANT; }
