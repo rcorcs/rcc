@@ -7,11 +7,15 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../symtab/symbol_table.h"
+
 // Analisador léxico que será chamado pelo Parser.
 int yylex();
 
 // Contagem e saída de erros.
 void yyerror(const char *);
+ 
+extern SymbolTable symbolTable;
  
 %}
 
@@ -583,6 +587,16 @@ direct_declarator
 	: IDENTIFIER {
       IdentifierDeclarationNode *node = new IdentifierDeclarationNode($1);
       $$ = node;
+      
+      if(symbolTable.isAtCurrentScope($1)){
+         printf("Identifier %s is already defined\n", $1);
+         yyerror("Duplicate definition.\n");
+      }
+      printf("adding ID %s to symtab in scope %d.\n", $1, symbolTable.scopeCount());
+      IdentifierInformation *idInfo = new IdentifierInformation($1);
+      
+      symbolTable.insertAtCurrentScope(idInfo);
+      
 }	| '(' declarator ')' { $$ = $2; }
 	| direct_declarator '[' ']'
 	| direct_declarator '[' '*' ']'
@@ -721,7 +735,7 @@ labeled_statement
 
 compound_statement
 	: '{' '}' { $$ = NULL; }
-	| '{'  block_item_list '}' { $$ = $2; }
+	| '{' {printf("begin scope\n"); ::symbolTable.pushScope();} block_item_list {delete ::symbolTable.popScope();printf("end scope\n");}'}' { $$ = $3; }
 	;
 
 block_item_list
@@ -811,8 +825,8 @@ external_declaration
 	;
 
 function_definition
-	: declaration_specifiers declarator declaration_list compound_statement
-	| declaration_specifiers declarator compound_statement
+	: declaration_specifiers declarator declaration_list {printf("defining function.\n");} compound_statement
+	| declaration_specifiers declarator {printf("defining function.\n");} compound_statement
 	;
 
 declaration_list
@@ -842,3 +856,4 @@ void yyerror(const char *s)
 	printf("%*s\n%*s\n", column, "^", column, s);
 	
 }
+

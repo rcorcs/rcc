@@ -6,6 +6,10 @@ using namespace std;
 
 #include "datatypes.h"
 
+#include "symtab/symbol_table.h"
+ 
+SymbolTable symbolTable;
+
 extern FILE *yyin;
 int yylex();
 void yyparse();
@@ -32,7 +36,10 @@ int main(int argc, char **argv)
 void testparse(char *file)
 {
    if(!newfile(file)) return;
+   symbolTable.pushScope();
    yyparse();
+   delete symbolTable.popScope();
+
 }
 
 void testlex(char *file)

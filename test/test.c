@@ -52,6 +52,7 @@ void main()
 int func()
 <%
    int a = 5;
+   float a = 3.1415;
    return 5;
 %>
 

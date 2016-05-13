@@ -12,9 +12,18 @@ by ROCHA, Rodrigo Caetano
 * Basic data-type structures (e.g.: primitives, struct)
 * Basic identifier structures (e.g.: function names, variable names)
 
+### TODO
+
+* AST: build the abstract syntax tree (almost finished)
+* TypeCheck: perform semantic analysis
+* CGen: generate C code from the AST
+* RIR: design and generate an intermediate representation
+* LLGen: generate LLVM IR code from the RIR
+* RIR backend: generate a RIR backend for different architectures
+* Optimizations on both AST and RIR level
+
 ### Building Dependencies
 
-* [gcc](https://gcc.gnu.org/)
 * [bison](http://www.gnu.org/software/bison/) 
 * [flex](http://flex.sourceforge.net/)
 
