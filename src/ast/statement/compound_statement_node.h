@@ -8,6 +8,7 @@ public:
    CompoundStatementNode(StatementNode *statement, CompoundStatementNode *nextStatement);
    StatementNode *statement();
    CompoundStatementNode *nextStatement();
+   void nextStatement(CompoundStatementNode *nextStatement);
 private:
    StatementNode *_stmt;
    CompoundStatementNode *_nextStmt;

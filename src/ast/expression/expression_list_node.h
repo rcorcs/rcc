@@ -8,8 +8,8 @@ class ExpressionListNode : public ExpressionNode {
 public:
    ExpressionListNode(ExpressionNode *expr, ExpressionListNode *next);
    
-   ExpressionNode *expr();
-   ExpressionListNode *next();
+   ExpressionNode *expression();
+   ExpressionListNode *nextExpression();
 private:
    ExpressionNode *_expr;
    ExpressionListNode *_next;

@@ -2,18 +2,19 @@
 #define RCC_AST_CAST_NODE_H
 
 #include "expression_node.h"
+#include "../type/type_node.h"
 
 #include<string>
 using std::string;
 
 class CastNode : public ExpressionNode {
 public:
-   CastNode(string type, ExpressionNode *operand);
+   CastNode(TypeNode *type, ExpressionNode *operand);
 
-   string type();   
+   TypeNode *type();   
    ExpressionNode *operand();
 private:
-   string _type;
+   TypeNode *_type;
    ExpressionNode *_operand;
 };
 

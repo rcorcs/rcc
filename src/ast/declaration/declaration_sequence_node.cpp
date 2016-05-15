@@ -14,3 +14,6 @@ DeclarationSequenceNode *DeclarationSequenceNode::nextDeclaration(){
    return _nextDeclaration;
 }
 
+void DeclarationSequenceNode::nextDeclaration(DeclarationSequenceNode *nextDeclaration){
+   _nextDeclaration = nextDeclaration;
+}

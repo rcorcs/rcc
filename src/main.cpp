@@ -8,6 +8,8 @@ using namespace std;
 #include "ast/ast.h"
 #include "ast/ast_visitor.h"
 
+#include "cgen/ast_cgen.h"
+
 #include "symtab/symbol_table.h"
  
 SymbolTable symbolTable;
@@ -42,8 +44,10 @@ void testparse(char *file)
    if(!newfile(file)) return;
    symbolTable.pushScope();
    yyparse();
-   ASTVisitor visitor;
-   visitor.visit(astRoot);
+   //ASTVisitor visitor;
+   //visitor.visit(astRoot);
+   ASTCGen cgen;
+   cout << cgen.visit(astRoot) << endl;
    delete symbolTable.popScope();
 
 }

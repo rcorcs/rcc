@@ -5,7 +5,7 @@ StorageSpecifierNode::StorageSpecifierNode(StorageSpecifier specifier)
    _specifier = specifier;
 }
 
-StorageSpecifier StorageSpecifierNode::functionSpecifier(){
+StorageSpecifier StorageSpecifierNode::storageSpecifier(){
    return _specifier;
 }
 

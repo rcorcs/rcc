@@ -14,3 +14,7 @@ CompoundStatementNode *CompoundStatementNode::nextStatement(){
    return _nextStmt;
 }
 
+void CompoundStatementNode::nextStatement(CompoundStatementNode *nextStatement){
+   _nextStmt = nextStatement;
+}
+

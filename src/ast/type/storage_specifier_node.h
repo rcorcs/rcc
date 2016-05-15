@@ -15,7 +15,7 @@ enum StorageSpecifier
 class StorageSpecifierNode : public TypeNode {
 public:
    StorageSpecifierNode(StorageSpecifier specifier);
-   StorageSpecifier functionSpecifier();
+   StorageSpecifier storageSpecifier();
 private:
    StorageSpecifier _specifier;
 };

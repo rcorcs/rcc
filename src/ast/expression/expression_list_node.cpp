@@ -6,11 +6,11 @@ ExpressionListNode::ExpressionListNode(ExpressionNode *expr, ExpressionListNode 
    _next = next;
 }
 
-ExpressionNode *ExpressionListNode::expr(){
+ExpressionNode *ExpressionListNode::expression(){
    return _expr;
 }
 
-ExpressionListNode *ExpressionListNode::next(){
+ExpressionListNode *ExpressionListNode::nextExpression(){
    return _next;
 }
 

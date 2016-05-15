@@ -11,12 +11,12 @@ by ROCHA, Rodrigo Caetano
 * Macro pre-processor (e.g.: #include, #define)
 * Basic data-type structures (e.g.: primitives, struct)
 * Basic identifier structures (e.g.: function names, variable names)
+* AST: build the abstract syntax tree (almost finished)
+* CGen: generate C code from the AST
 
 ### TODO
 
-* AST: build the abstract syntax tree (almost finished)
 * TypeCheck: perform semantic analysis
-* CGen: generate C code from the AST
 * RIR: design and generate an intermediate representation
 * LLGen: generate LLVM IR code from the RIR
 * RIR backend: generate a RIR backend for different architectures

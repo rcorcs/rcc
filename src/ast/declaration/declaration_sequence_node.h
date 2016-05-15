@@ -8,6 +8,7 @@ public:
    DeclarationSequenceNode(DeclarationNode *declaration, DeclarationSequenceNode *nextDeclaration);
    DeclarationNode *declaration();
    DeclarationSequenceNode *nextDeclaration();
+   void nextDeclaration(DeclarationSequenceNode *nextDeclaration);
 private:
    DeclarationNode *_declaration;
    DeclarationSequenceNode *_nextDeclaration;

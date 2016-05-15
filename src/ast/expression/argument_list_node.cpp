@@ -6,11 +6,14 @@ ArgumentListNode::ArgumentListNode(ExpressionNode *expr, ArgumentListNode *next)
    _next = next;
 }
 
-ExpressionNode *ArgumentListNode::expr(){
+ExpressionNode *ArgumentListNode::expression(){
    return _expr;
 }
 
-ArgumentListNode *ArgumentListNode::next(){
+ArgumentListNode *ArgumentListNode::nextExpression(){
    return _next;
 }
 
+void ArgumentListNode::nextExpression(ArgumentListNode *next){
+   _next = next;
+}

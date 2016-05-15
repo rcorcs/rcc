@@ -8,8 +8,9 @@ class ArgumentListNode : public ExpressionNode {
 public:
    ArgumentListNode(ExpressionNode *expr, ArgumentListNode *next);
    
-   ExpressionNode *expr();
-   ArgumentListNode *next();
+   ExpressionNode *expression();
+   ArgumentListNode *nextExpression();
+   void nextExpression(ArgumentListNode *next);
 private:
    ExpressionNode *_expr;
    ArgumentListNode *_next;

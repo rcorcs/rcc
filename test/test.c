@@ -49,7 +49,7 @@ void main()
 
 
 
-int func()
+const int func()
 <%
    return 5;
 %>

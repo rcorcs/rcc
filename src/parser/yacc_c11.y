@@ -85,6 +85,7 @@ Node *astRoot = NULL;
 %type <type> type_specifier struct_or_union_specifier declaration_specifiers
              type_qualifier function_specifier specifier_qualifier_list
              type_qualifier_list storage_class_specifier
+             type_name
 
 %start translation_unit
 %%
@@ -167,8 +168,14 @@ argument_expression_list
    	$$ = node;
 }	| argument_expression_list ',' assignment_expression {
       //TODO solve list inversion
-   	ArgumentListNode *node = new ArgumentListNode($3, (ArgumentListNode*)$1); 
+      ArgumentListNode *node = (ArgumentListNode*)$1; 
+     	ArgumentListNode *arg = new ArgumentListNode($3, NULL);
    	$$ = node;
+   	ArgumentListNode *argList = node;
+   	while(argList->nextExpression()!=NULL){
+   	   argList = argList->nextExpression();
+      }
+      argList->nextExpression(arg);
 }	;
 
 unary_expression
@@ -199,7 +206,7 @@ unary_operator
 cast_expression
 	: unary_expression { $$ = $1; }
 	| '(' type_name ')' cast_expression {
-   	CastNode *node = new CastNode("type",$4);
+   	CastNode *node = new CastNode($2,$4);
    	$$ = node;
 }	;
 
@@ -700,9 +707,15 @@ identifier_list
 	;
 
 type_name
-	: specifier_qualifier_list abstract_declarator
-	| specifier_qualifier_list
-	;
+	: specifier_qualifier_list abstract_declarator {
+      
+}	| specifier_qualifier_list {
+      
+}	;
+
+
+
+
 
 abstract_declarator
 	: pointer direct_abstract_declarator  {
@@ -811,8 +824,16 @@ block_item_list
 	   CompoundStatementNode *node = new CompoundStatementNode($1, NULL);
 	   $$ = node;
 }	| block_item_list block_item {
-	   CompoundStatementNode *node = new CompoundStatementNode($2, (CompoundStatementNode *)$1);
-	   $$ = node;
+	   //CompoundStatementNode *node = new CompoundStatementNode($2, (CompoundStatementNode *)$1);
+	   //$$ = node;
+	   CompoundStatementNode *node = (CompoundStatementNode*)$1; 
+     	CompoundStatementNode *stmt = new CompoundStatementNode($2, NULL);
+   	$$ = node;
+   	CompoundStatementNode *stmtList = node;
+   	while(stmtList->nextStatement()!=NULL){
+   	   stmtList = stmtList->nextStatement();
+      }
+      stmtList->nextStatement(stmt);
 }	;
 
 block_item
@@ -888,9 +909,18 @@ translation_unit
 	   $$ = node;
 	   astRoot = node;
 }	| translation_unit external_declaration {
-	   DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
-	   $$ = node;
-	   astRoot = node;
+	   //DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
+	   //$$ = node;
+	   //astRoot = node;
+	   DeclarationSequenceNode *node = (DeclarationSequenceNode*)$1; 
+     	DeclarationSequenceNode *decl = new DeclarationSequenceNode($2, NULL);
+   	$$ = node;
+   	astRoot = node;
+   	DeclarationSequenceNode *declList = node;
+   	while(declList->nextDeclaration()!=NULL){
+   	   declList = declList->nextDeclaration();
+      }
+      declList->nextDeclaration(decl);
 }	;
 
 external_declaration
