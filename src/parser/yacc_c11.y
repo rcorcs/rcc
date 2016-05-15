@@ -73,13 +73,16 @@ extern SymbolTable symbolTable;
                   labeled_statement
 
 %type <declaration> declaration init_declarator_list init_declarator declarator
-                    direct_declarator
+                    direct_declarator pointer
                     initializer
                     struct_declaration_list struct_declaration
                     struct_declarator_list struct_declarator
-	
+                    parameter_type_list parameter_list parameter_declaration
+                    direct_abstract_declarator abstract_declarator
+
 %type <type> type_specifier struct_or_union_specifier declaration_specifiers
              type_qualifier function_specifier specifier_qualifier_list
+             type_qualifier_list storage_class_specifier
 
 %start translation_unit
 %%
@@ -383,12 +386,22 @@ init_declarator
 
 storage_class_specifier
 	: TYPEDEF	/* identifiers must be flagged as TYPEDEF_NAME */
-	| EXTERN
-	| STATIC
-	| THREAD_LOCAL
-	| AUTO
-	| REGISTER
-	;
+	| EXTERN {
+	   StorageSpecifierNode *node = new StorageSpecifierNode(StorageSpecifier::TYPE_EXTERN);
+	   $$ = node;
+}	| STATIC {
+	   StorageSpecifierNode *node = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+	   $$ = node;
+}	| THREAD_LOCAL {
+	   StorageSpecifierNode *node = new StorageSpecifierNode(StorageSpecifier::TYPE_THREAD_LOCAL);
+	   $$ = node;
+}	| AUTO {
+	   StorageSpecifierNode *node = new StorageSpecifierNode(StorageSpecifier::TYPE_AUTO);
+	   $$ = node;
+}	| REGISTER {
+	   StorageSpecifierNode *node = new StorageSpecifierNode(StorageSpecifier::TYPE_REGISTER);
+	   $$ = node;
+}	;
 
 type_specifier
 	: VOID {
@@ -575,9 +588,17 @@ alignment_specifier
 
 declarator
 	: pointer direct_declarator {
-	   //TODO pointer???
+	   PointerDeclaratorNode *pointer = (PointerDeclaratorNode *)$1;
 	   DeclaratorNode *node = new DeclaratorNode($2);
-	   $$ = node;
+	   
+	   $$ = pointer;
+	   
+	   PointerDeclaratorNode *ptr = pointer;
+	   while(ptr->declaration()!=NULL){
+	      ptr = (PointerDeclaratorNode *)(ptr->declaration());
+      }
+      ptr->declaration(node);
+      
 }	| direct_declarator {
 	   DeclaratorNode *node = new DeclaratorNode($1);
 	   $$ = node;
@@ -613,33 +634,63 @@ direct_declarator
 	;
 
 pointer
-	: '*' type_qualifier_list pointer
-	| '*' type_qualifier_list
-	| '*' pointer
-	| '*'
-	;
+	: '*' type_qualifier_list pointer {
+	   PointerDeclaratorNode *node = new PointerDeclaratorNode((TypeCompositionNode *)$2, $3);
+	   $$ = node;
+}	| '*' type_qualifier_list {
+	   PointerDeclaratorNode *node = new PointerDeclaratorNode((TypeCompositionNode *)$2, NULL);
+	   $$ = node;
+}	| '*' pointer {
+	   PointerDeclaratorNode *node = new PointerDeclaratorNode(NULL, $2);
+	   $$ = node;
+}	| '*' {
+	   PointerDeclaratorNode *node = new PointerDeclaratorNode(NULL, NULL);
+	   $$ = node;
+}	;
 
 type_qualifier_list
-	: type_qualifier
-	| type_qualifier_list type_qualifier
-	;
+	: type_qualifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	| type_qualifier_list type_qualifier {
+	   TypeCompositionNode *node = new TypeCompositionNode($2, (TypeCompositionNode *)$1);
+	   $$ = node;
+}	;
 
 
 parameter_type_list
-	: parameter_list ',' ELLIPSIS
-	| parameter_list
+	: parameter_list ',' ELLIPSIS {
+	   EllipsisParameterNode *ellipsis = new EllipsisParameterNode();
+	   ParameterListNode *node = (ParameterListNode *)$1;
+	   $$ = node;
+	   ParameterListNode *parameter = node;
+	   while(parameter->nextParameter()!=NULL){
+	      parameter = parameter->nextParameter();
+      }
+      parameter->nextParameter(new ParameterListNode(ellipsis, NULL));
+}	| parameter_list { $$ = $1; }
 	;
 
 parameter_list
-	: parameter_declaration
-	| parameter_list ',' parameter_declaration
-	;
+	: parameter_declaration {
+	   ParameterListNode *node = new ParameterListNode($1, NULL);
+	   $$ = node;
+}	| parameter_list ',' parameter_declaration {
+	   ParameterListNode *node = new ParameterListNode($3, (ParameterListNode *)$1);
+	   $$ = node;
+}	;
 
 parameter_declaration
-	: declaration_specifiers declarator
-	| declaration_specifiers abstract_declarator
-	| declaration_specifiers
-	;
+	: declaration_specifiers declarator {
+	   ParameterDeclarationNode *node = new ParameterDeclarationNode($1, $2);
+	   $$ = node;
+}	| declaration_specifiers abstract_declarator {
+	   ParameterDeclarationNode *node = new ParameterDeclarationNode($1, $2);
+	   $$ = node;      
+}	| declaration_specifiers {
+	   ParameterDeclarationNode *node = new ParameterDeclarationNode($1, NULL);
+	   $$ = node;      
+}	;
 
 identifier_list
 	: IDENTIFIER
@@ -652,13 +703,28 @@ type_name
 	;
 
 abstract_declarator
-	: pointer direct_abstract_declarator
-	| pointer
-	| direct_abstract_declarator
-	;
+	: pointer direct_abstract_declarator  {
+	   PointerDeclaratorNode *pointer = (PointerDeclaratorNode *)$1;
+	   DeclaratorNode *node = new DeclaratorNode($2);
+	   
+	   $$ = pointer;
+	   
+	   PointerDeclaratorNode *ptr = pointer;
+	   while(ptr->declaration()!=NULL){
+	      ptr = (PointerDeclaratorNode *)(ptr->declaration());
+      }
+      ptr->declaration(node);
+      
+}	| pointer {
+	   DeclaratorNode *node = new DeclaratorNode($1);
+	   $$ = node;
+}	| direct_abstract_declarator {
+	   DeclaratorNode *node = new DeclaratorNode($1);
+	   $$ = node;
+}	;
 
 direct_abstract_declarator
-	: '(' abstract_declarator ')'
+	: '(' abstract_declarator ')' { $$ = $2; }
 	| '[' ']'
 	| '[' '*' ']'
 	| '[' STATIC type_qualifier_list assignment_expression ']'

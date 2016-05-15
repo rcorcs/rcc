@@ -40,6 +40,10 @@
 #include "declaration/declaration_sequence_node.h"
 #include "declaration/attribute_declaration_node.h"
 #include "declaration/declarator_node.h"
+#include "declaration/pointer_declarator_node.h"
+#include "declaration/parameter_list_node.h"
+#include "declaration/ellipsis_parameter_node.h"
+#include "declaration/parameter_declaration_node.h"
 
 #include "type/type_node.h"
 #include "type/type_composition_node.h"
@@ -48,3 +52,4 @@
 #include "type/union_type_node.h"
 #include "type/qualifier_type_node.h"
 #include "type/function_specifier_node.h"
+#include "type/storage_specifier_node.h"
