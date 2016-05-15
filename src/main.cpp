@@ -5,12 +5,16 @@
 using namespace std;
 
 #include "datatypes.h"
+#include "ast/ast.h"
+#include "ast/ast_visitor.h"
 
 #include "symtab/symbol_table.h"
  
 SymbolTable symbolTable;
 
 extern FILE *yyin;
+extern Node *astRoot;
+
 int yylex();
 void yyparse();
 int newfile(char *fn);
@@ -38,6 +42,8 @@ void testparse(char *file)
    if(!newfile(file)) return;
    symbolTable.pushScope();
    yyparse();
+   ASTVisitor visitor;
+   visitor.visit(astRoot);
    delete symbolTable.popScope();
 
 }

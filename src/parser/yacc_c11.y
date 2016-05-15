@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "../ast/ast.h"
 #include "../symtab/symbol_table.h"
 
 // Analisador léxico que será chamado pelo Parser.
@@ -16,7 +17,7 @@ int yylex();
 void yyerror(const char *);
  
 extern SymbolTable symbolTable;
- 
+Node *astRoot = NULL;
 %}
 
 %union {
@@ -79,6 +80,7 @@ extern SymbolTable symbolTable;
                     struct_declarator_list struct_declarator
                     parameter_type_list parameter_list parameter_declaration
                     direct_abstract_declarator abstract_declarator
+                    translation_unit external_declaration function_definition
 
 %type <type> type_specifier struct_or_union_specifier declaration_specifiers
              type_qualifier function_specifier specifier_qualifier_list
@@ -881,19 +883,29 @@ jump_statement
 }	;
 
 translation_unit
-	: external_declaration
-	| translation_unit external_declaration
-	;
+	: external_declaration {
+	   DeclarationSequenceNode *node = new DeclarationSequenceNode($1, NULL);
+	   $$ = node;
+	   astRoot = node;
+}	| translation_unit external_declaration {
+	   DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
+	   $$ = node;
+	   astRoot = node;
+}	;
 
 external_declaration
-	: function_definition
-	| declaration
+	: function_definition { $$ = $1; }
+	| declaration { $$ = $1; }
 	;
 
 function_definition
-	: declaration_specifiers declarator declaration_list {printf("defining function.\n");} compound_statement
-	| declaration_specifiers declarator {printf("defining function.\n");} compound_statement
-	;
+	: declaration_specifiers declarator declaration_list {printf("defining function.\n");} compound_statement {
+      FunctionDeclarationNode *node = new FunctionDeclarationNode($1, $2, $5);
+      $$ = node;	   
+}	| declaration_specifiers declarator {printf("defining function.\n");} compound_statement {
+      FunctionDeclarationNode *node = new FunctionDeclarationNode($1, $2, $4);
+      $$ = node;
+}	;
 
 declaration_list
 	: declaration

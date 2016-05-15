@@ -132,7 +132,7 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 22 "src/parser/yacc_c11.y" /* yacc.c:1909  */
+#line 23 "src/parser/yacc_c11.y" /* yacc.c:1909  */
 
     //bool    bool_value;
     //int     int_value;

@@ -4,7 +4,7 @@ Node::Node(NodeType type){
    _type = type;
 }
 
-NodeType Node::type(){
+NodeType Node::nodeType(){
    return _type;
 }
 

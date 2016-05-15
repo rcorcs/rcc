@@ -56,6 +56,7 @@ enum NodeType
    NODE_TYPE_VARIABLE_DECLARATION,
    NODE_TYPE_PARAMETER_DECLARATION,
    NODE_TYPE_ATTRIBUTE_DECLARATION,
+   NODE_TYPE_FUNCTION_DECLARATION,
 
 //TYPE:
    NODE_TYPE_PRIMITIVE_TYPE,
@@ -71,7 +72,7 @@ class Node {
 public:
    Node(NodeType type);
 
-   NodeType type();
+   NodeType nodeType();
    
 private:
    NodeType _type;

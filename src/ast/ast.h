@@ -44,6 +44,7 @@
 #include "declaration/parameter_list_node.h"
 #include "declaration/ellipsis_parameter_node.h"
 #include "declaration/parameter_declaration_node.h"
+#include "declaration/function_declaration_node.h"
 
 #include "type/type_node.h"
 #include "type/type_composition_node.h"
