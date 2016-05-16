@@ -3,20 +3,15 @@
 
 
 #include "declaration_node.h"
-#include "identifier_declaration_node.h"
-#include "../type/type_node.h"
-#include <string>
-
-using std::string;
 
 class VariableDeclarationNode : public DeclarationNode {
 public:
-   VariableDeclarationNode(TypeNode *type, IdentifierDeclarationNode *id);
-   TypeNode *type();
-   IdentifierDeclarationNode *identifier();
+   VariableDeclarationNode(DeclarationNode *specifier, DeclarationNode *declarator);
+   DeclarationNode *specifier();
+   DeclarationNode *declarator();
 private:
-   TypeNode *_type;
-   IdentifierDeclarationNode *_id;
+   DeclarationNode *_specifier;
+   DeclarationNode *_declarator;
 };
 
 #endif

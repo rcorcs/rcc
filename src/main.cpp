@@ -44,8 +44,8 @@ void testparse(char *file)
    if(!newfile(file)) return;
    symbolTable.pushScope();
    yyparse();
-   //ASTVisitor visitor;
-   //visitor.visit(astRoot);
+   ASTVisitor visitor;
+   visitor.visit(astRoot);
    ASTCGen cgen;
    cout << cgen.visit(astRoot) << endl;
    delete symbolTable.popScope();

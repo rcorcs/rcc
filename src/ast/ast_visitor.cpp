@@ -118,6 +118,18 @@ void ASTVisitor::visit(Node *root){
    case NODE_TYPE_PARAMETER_DECLARATION:
       visitParameterDeclarationNode((ParameterDeclarationNode *)root);
       break;
+   case NODE_TYPE_ASSIGNMENT:
+      visitAssignmentNode((AssignmentNode *)root);
+      break;
+   case NODE_TYPE_VARIABLE_DECLARATION:
+      visitVariableDeclarationNode((VariableDeclarationNode *)root);
+      break;
+   case NODE_TYPE_DECLARATION_SPECIFIER:
+      visitDeclarationSpecifierNode((DeclarationSpecifierNode *)root);
+      break;
+   case NODE_TYPE_DECLARATION_LIST:
+      visitDeclarationListNode((DeclarationListNode *)root);
+      break;
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -381,6 +393,33 @@ void ASTVisitor::visitParameterDeclarationNode(ParameterDeclarationNode *node){
    visit(node->type());
    cout << "declarator:" << endl;
    visit(node->declarator());
+}
+
+void ASTVisitor::visitAssignmentNode(AssignmentNode *node){
+   cout << "Visiting AssignmentNode" << endl;
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+   cout << "initializer:" << endl;
+   visit(node->initializer());
+}
+
+void ASTVisitor::visitVariableDeclarationNode(VariableDeclarationNode *node){
+   cout << "Visiting VariableDeclarationNode" << endl;
+   cout << "specifier:" << endl;
+   visit(node->specifier());
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+}
+
+void ASTVisitor::visitDeclarationSpecifierNode(DeclarationSpecifierNode *node){
+   cout << "Visiting DeclarationSpecifierNode" << endl;
+   visit(node->typeSpecifier());
+}
+
+void ASTVisitor::visitDeclarationListNode(DeclarationListNode *node){
+   cout << "Visiting DeclarationListNode" << endl;
+   visit(node->declaration());
+   visit(node->nextDeclaration());
 }
 
 //TYPE:

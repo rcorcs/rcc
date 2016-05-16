@@ -83,6 +83,14 @@ string ASTCGen::visit(Node *root){
       return visitFunctionDeclaratorNode((FunctionDeclaratorNode *)root);
    case NODE_TYPE_PARAMETER_DECLARATION:
       return visitParameterDeclarationNode((ParameterDeclarationNode *)root);
+   case NODE_TYPE_ASSIGNMENT:
+      return visitAssignmentNode((AssignmentNode *)root);
+   case NODE_TYPE_VARIABLE_DECLARATION:
+      return visitVariableDeclarationNode((VariableDeclarationNode *)root);
+   case NODE_TYPE_DECLARATION_SPECIFIER:
+      return visitDeclarationSpecifierNode((DeclarationSpecifierNode *)root);
+   case NODE_TYPE_DECLARATION_LIST:
+      return visitDeclarationListNode((DeclarationListNode *)root);
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       return visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -269,6 +277,28 @@ string ASTCGen::visitParameterDeclarationNode(ParameterDeclarationNode *node){
    return visit(node->type())+" "+visit(node->declarator());
 }
 
+string ASTCGen::visitAssignmentNode(AssignmentNode *node){
+   string s = visit(node->declarator());
+   if(node->initializer()!=NULL){
+      s += " = "+visit(node->initializer());
+   }
+   return s;
+}
+
+string ASTCGen::visitVariableDeclarationNode(VariableDeclarationNode *node){
+   return visit(node->specifier())+" "+visit(node->declarator());
+}
+
+string ASTCGen::visitDeclarationSpecifierNode(DeclarationSpecifierNode *node){
+   return visit(node->typeSpecifier());
+}
+
+string ASTCGen::visitDeclarationListNode(DeclarationListNode *node){
+   string s = visit(node->declaration());
+   if(node->nextDeclaration()!=NULL)
+      s += ", "+visit(node->nextDeclaration());
+   return s;
+}
 
 //TYPE:
 string ASTCGen::visitTypeCompositionNode(TypeCompositionNode *node){

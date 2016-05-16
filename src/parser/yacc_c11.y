@@ -351,7 +351,9 @@ declaration
       DeclarationSpecifierNode *node = new DeclarationSpecifierNode($1);
       $$ = node;
 }	| declaration_specifiers init_declarator_list ';' {
-      
+      DeclarationSpecifierNode *specifier = new DeclarationSpecifierNode($1);
+      VariableDeclarationNode *node = new VariableDeclarationNode(specifier, $2);
+      $$ = node;
 }	| static_assert_declaration {
       
 }	;
@@ -390,8 +392,15 @@ init_declarator_list
 	   DeclarationListNode *node = new DeclarationListNode($1, NULL);
 	   $$ = node;
 }	| init_declarator_list ',' init_declarator {
-	   DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
+	   //DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
+	   //$$ = node;
+	   DeclarationListNode *node = (DeclarationListNode *)$1;
 	   $$ = node;
+	   DeclarationListNode *decl = node;
+	   while(decl->nextDeclaration()!=NULL){
+	      decl = decl->nextDeclaration();
+      }
+      decl->nextDeclaration(new DeclarationListNode($3, NULL));
 }	;
 
 init_declarator

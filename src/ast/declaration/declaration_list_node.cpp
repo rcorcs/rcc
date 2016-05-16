@@ -14,3 +14,6 @@ DeclarationListNode *DeclarationListNode::nextDeclaration(){
    return _nextDeclaration;
 }
 
+void DeclarationListNode::nextDeclaration(DeclarationListNode *nextDeclaration){
+   _nextDeclaration = nextDeclaration;
+}

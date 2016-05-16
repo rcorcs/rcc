@@ -49,6 +49,10 @@ public:
    string visitPointerDeclaratorNode(PointerDeclaratorNode *node);
    string visitFunctionDeclaratorNode(FunctionDeclaratorNode *node);
    string visitParameterDeclarationNode(ParameterDeclarationNode *node);
+   string visitAssignmentNode(AssignmentNode *node);
+   string visitVariableDeclarationNode(VariableDeclarationNode *node);
+   string visitDeclarationSpecifierNode(DeclarationSpecifierNode *node);
+   string visitDeclarationListNode(DeclarationListNode *node);
 //TYPE:
    string visitTypeCompositionNode(TypeCompositionNode *node);
    string visitPrimitiveTypeNode(PrimitiveTypeNode *node);

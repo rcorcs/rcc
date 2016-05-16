@@ -1,16 +1,16 @@
 #include "variable_declaration_node.h"
 
-VariableDeclarationNode::VariableDeclarationNode(TypeNode *type, IdentifierDeclarationNode *id)
+VariableDeclarationNode::VariableDeclarationNode(DeclarationNode *specifier, DeclarationNode *declarator)
    : DeclarationNode(NODE_TYPE_VARIABLE_DECLARATION) {
-   _type = type;
-   _id = id;
+   _specifier = specifier;
+   _declarator = declarator;
 }
 
-TypeNode *VariableDeclarationNode::type(){
-   return _type;
+DeclarationNode *VariableDeclarationNode::specifier(){
+   return _specifier;
 }
 
-IdentifierDeclarationNode *VariableDeclarationNode::identifier(){
-   return _id;
+DeclarationNode *VariableDeclarationNode::declarator(){
+   return _declarator;
 }
 
