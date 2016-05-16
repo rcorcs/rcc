@@ -75,6 +75,14 @@ string ASTCGen::visit(Node *root){
       return visitDeclaratorNode((DeclaratorNode *)root);
    case NODE_TYPE_IDENTIFIER_DECLARATION:
       return visitIdentifierDeclarationNode((IdentifierDeclarationNode *)root);
+   case NODE_TYPE_PARAMETER_LIST:
+      return visitParameterListNode((ParameterListNode *)root);
+   case NODE_TYPE_POINTER_DECLARATOR:
+      return visitPointerDeclaratorNode((PointerDeclaratorNode *)root);
+   case NODE_TYPE_FUNCTION_DECLARATOR:
+      return visitFunctionDeclaratorNode((FunctionDeclaratorNode *)root);
+   case NODE_TYPE_PARAMETER_DECLARATION:
+      return visitParameterDeclarationNode((ParameterDeclarationNode *)root);
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       return visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -89,6 +97,7 @@ string ASTCGen::visit(Node *root){
    default:
       cout << "Unknown node type." << endl;
    }
+   return "";
 }
 
 //EXPRESSION:
@@ -238,12 +247,35 @@ string ASTCGen::visitIdentifierDeclarationNode(IdentifierDeclarationNode *node){
    return node->identifier();
 }
 
+
+string ASTCGen::visitParameterListNode(ParameterListNode *node){
+   string s = visit(node->declaration());
+   if(node->nextParameter()!=NULL)
+      s += ", "+visit(node->nextParameter());
+   return s;
+}
+
+string ASTCGen::visitPointerDeclaratorNode(PointerDeclaratorNode *node){
+   return "* "+visit(node->qualifiers())+" "+visit(node->declaration());
+}
+
+
+string ASTCGen::visitFunctionDeclaratorNode(FunctionDeclaratorNode *node){
+   return visit(node->declarator())+"("+visit(node->parameters())+")";
+}
+
+
+string ASTCGen::visitParameterDeclarationNode(ParameterDeclarationNode *node){
+   return visit(node->type())+" "+visit(node->declarator());
+}
+
+
 //TYPE:
 string ASTCGen::visitTypeCompositionNode(TypeCompositionNode *node){
    string s = visit(node->type());
    if(node->nextType()!=NULL)
       s += " "+visit(node->nextType());
-   return s;   
+   return s;
 }
 
 string ASTCGen::visitPrimitiveTypeNode(PrimitiveTypeNode *node){

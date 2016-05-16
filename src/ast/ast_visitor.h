@@ -42,6 +42,10 @@ public:
    void visitFunctionDeclarationNode(FunctionDeclarationNode *node);
    void visitDeclaratorNode(DeclaratorNode *node);
    void visitIdentifierDeclarationNode(IdentifierDeclarationNode *node);
+   void visitParameterListNode(ParameterListNode *node);
+   void visitPointerDeclaratorNode(PointerDeclaratorNode *node);
+   void visitFunctionDeclaratorNode(FunctionDeclaratorNode *node);
+   void visitParameterDeclarationNode(ParameterDeclarationNode *node);
 //TYPE:
    void visitTypeCompositionNode(TypeCompositionNode *node);
    void visitPrimitiveTypeNode(PrimitiveTypeNode *node);

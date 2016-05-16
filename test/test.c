@@ -20,7 +20,7 @@
 #endif
 
 /* it's the main function */
-void main()
+void main(int argc, char **argv)
 {
    char c = 'a';
    char *str = "blabla";

@@ -106,6 +106,18 @@ void ASTVisitor::visit(Node *root){
    case NODE_TYPE_IDENTIFIER_DECLARATION:
       visitIdentifierDeclarationNode((IdentifierDeclarationNode *)root);
       break;
+   case NODE_TYPE_PARAMETER_LIST:
+      visitParameterListNode((ParameterListNode *)root);
+      break;
+   case NODE_TYPE_POINTER_DECLARATOR:
+      visitPointerDeclaratorNode((PointerDeclaratorNode *)root);
+      break;
+   case NODE_TYPE_FUNCTION_DECLARATOR:
+      visitFunctionDeclaratorNode((FunctionDeclaratorNode *)root);
+      break;
+   case NODE_TYPE_PARAMETER_DECLARATION:
+      visitParameterDeclarationNode((ParameterDeclarationNode *)root);
+      break;
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -339,6 +351,36 @@ void ASTVisitor::visitDeclaratorNode(DeclaratorNode *node){
 void ASTVisitor::visitIdentifierDeclarationNode(IdentifierDeclarationNode *node){
    cout << "Visiting IdentifierDeclarationNode" << endl;
    cout << "ID: " << node->identifier() << endl;
+}
+
+void ASTVisitor::visitParameterListNode(ParameterListNode *node){
+   cout << "Visiting ParameterListNode" << endl;
+   visit(node->declaration());
+   visit(node->nextParameter());
+}
+
+void ASTVisitor::visitPointerDeclaratorNode(PointerDeclaratorNode *node){
+   cout << "Visiting PointerDeclaratorNode" << endl;
+   cout << "qualifiers:" << endl;
+   visit(node->qualifiers());
+   cout << "declaration:" << endl;
+   visit(node->declaration());
+}
+
+void ASTVisitor::visitFunctionDeclaratorNode(FunctionDeclaratorNode *node){
+   cout << "Visiting FunctionDeclaratorNode" << endl;
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+   cout << "parameters:" << endl;
+   visit(node->parameters());
+}
+
+void ASTVisitor::visitParameterDeclarationNode(ParameterDeclarationNode *node){
+   cout << "Visiting ParameterDeclarationNode" << endl;
+   cout << "type:" << endl;
+   visit(node->type());
+   cout << "declarator:" << endl;
+   visit(node->declarator());
 }
 
 //TYPE:

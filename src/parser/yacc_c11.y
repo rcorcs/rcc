@@ -347,15 +347,23 @@ constant_expression
 	;
 
 declaration
-	: declaration_specifiers ';'
-	| declaration_specifiers init_declarator_list ';'
-	| static_assert_declaration
-	;
+	: declaration_specifiers ';' {
+      DeclarationSpecifierNode *node = new DeclarationSpecifierNode($1);
+      $$ = node;
+}	| declaration_specifiers init_declarator_list ';' {
+      
+}	| static_assert_declaration {
+      
+}	;
 
 declaration_specifiers
-	: storage_class_specifier declaration_specifiers
-	| storage_class_specifier
-	| type_specifier declaration_specifiers {
+	: storage_class_specifier declaration_specifiers {
+      TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
+      $$ = node;
+}	| storage_class_specifier {
+      TypeCompositionNode *node = new TypeCompositionNode($1, NULL);
+	   $$ = node;
+}	| type_specifier declaration_specifiers {
 	   TypeCompositionNode *node = new TypeCompositionNode($1, (TypeCompositionNode*)$2);
 	   $$ = node;
 }	| type_specifier {
@@ -637,9 +645,13 @@ direct_declarator
 	| direct_declarator '[' type_qualifier_list assignment_expression ']'
 	| direct_declarator '[' type_qualifier_list ']'
 	| direct_declarator '[' assignment_expression ']'
-	| direct_declarator '(' parameter_type_list ')'
-	| direct_declarator '(' ')'
-	| direct_declarator '(' identifier_list ')'
+	| direct_declarator '(' parameter_type_list ')' {
+	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode($1, (ParameterListNode *)$3);
+	   $$ = node;
+}	| direct_declarator '(' ')' {
+	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode($1, NULL);
+	   $$ = node;
+}	| direct_declarator '(' identifier_list ')'
 	;
 
 pointer
@@ -685,8 +697,15 @@ parameter_list
 	   ParameterListNode *node = new ParameterListNode($1, NULL);
 	   $$ = node;
 }	| parameter_list ',' parameter_declaration {
-	   ParameterListNode *node = new ParameterListNode($3, (ParameterListNode *)$1);
+	   //ParameterListNode *node = new ParameterListNode($3, (ParameterListNode *)$1);
+	   //$$ = node;
+	   ParameterListNode *node = (ParameterListNode *)$1;
 	   $$ = node;
+	   ParameterListNode *parameter = node;
+	   while(parameter->nextParameter()!=NULL){
+	      parameter = parameter->nextParameter();
+      }
+      parameter->nextParameter(new ParameterListNode($3, NULL));
 }	;
 
 parameter_declaration
@@ -712,9 +731,6 @@ type_name
 }	| specifier_qualifier_list {
       
 }	;
-
-
-
 
 
 abstract_declarator
