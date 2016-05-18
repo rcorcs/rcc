@@ -47,6 +47,15 @@ void ASTVisitor::visit(Node *root){
    case NODE_TYPE_ARRAY_REFERENCE:
       visitArrayReferenceNode((ArrayReferenceNode *)root);
       break;
+   case NODE_TYPE_CAST:
+      visitCastNode((CastNode *)root);
+      break;
+   case NODE_TYPE_ATTRIBUTE_REFERENCE:
+      visitAttributeReferenceNode((AttributeReferenceNode *)root);
+      break;
+   case NODE_TYPE_SIZEOF:
+      visitSizeOfNode((SizeOfNode *)root);
+      break;
 //STATEMENT:
    case NODE_TYPE_BREAK:
       visitBreakNode((BreakNode *)root);
@@ -138,6 +147,12 @@ void ASTVisitor::visit(Node *root){
       break;
    case NODE_TYPE_EXPRESSION_DECLARATION:
       visitExpressionDeclarationNode((ExpressionDeclarationNode *)root);
+      break;
+   case NODE_TYPE_TYPE_DECLARATION:
+      visitTypeDeclarationNode((TypeDeclarationNode *)root);
+      break;
+   case NODE_TYPE_ARRAY_DECLARATION:
+      visitArrayDeclarationNode((ArrayDeclarationNode *)root);
       break;
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
@@ -251,9 +266,23 @@ void ASTVisitor::visitArrayReferenceNode(ArrayReferenceNode *node){
 void ASTVisitor::visitCastNode(CastNode *node){
    cout << "Visiting CastNode" << endl;
    cout << "type: " << endl;
-   visit(node->type());
+   visit(node->typeDeclation());
    cout << "operand: " << endl;
    visit(node->operand());
+}
+
+void ASTVisitor::visitAttributeReferenceNode(AttributeReferenceNode *node){
+   cout << "Visiting AttributeReferenceNode" << endl;
+   cout << "base: " << endl;
+   visit(node->base());
+   cout << "operation: " << node->operation() << endl;
+   cout << "ID: " << node->identifier() << endl;
+}
+
+void ASTVisitor::visitSizeOfNode(SizeOfNode *node){
+   cout << "Visiting SizeOfNode" << endl;
+   cout << "type: " << endl;
+   visit(node->typeDeclation());
 }
 
 //STATEMENT:
@@ -457,7 +486,25 @@ void ASTVisitor::visitExpressionDeclarationNode(ExpressionDeclarationNode *node)
    cout << "Visiting ExpressionDeclarationNode" << endl;
    visit(node->expression());
 }
-   
+
+void ASTVisitor::visitTypeDeclarationNode(TypeDeclarationNode *node){
+   cout << "Visiting TypeDeclarationNode" << endl;
+   cout << "specifier:" << endl;
+   visit(node->specifier());
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+}
+
+void ASTVisitor::visitArrayDeclarationNode(ArrayDeclarationNode *node){
+   cout << "Visiting ArrayDeclarationNode" << endl;
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+   cout << "qualifiers:" << endl;
+   visit(node->qualifiers());
+   cout << "size:" << endl;
+   visit(node->size());
+}
+      
 //TYPE:
 void ASTVisitor::visitTypeCompositionNode(TypeCompositionNode *node){
    cout << "Visiting TypeCompositionNode" << endl;

@@ -75,7 +75,7 @@ Node *astRoot = NULL;
 
 %type <declaration> declaration init_declarator_list init_declarator declarator
                     direct_declarator pointer
-                    initializer
+                    initializer type_name
                     struct_declaration_list struct_declaration
                     struct_declarator_list struct_declarator
                     parameter_type_list parameter_list parameter_declaration
@@ -85,7 +85,7 @@ Node *astRoot = NULL;
 %type <type> type_specifier struct_or_union_specifier declaration_specifiers
              type_qualifier function_specifier specifier_qualifier_list
              type_qualifier_list storage_class_specifier
-             type_name
+             
 
 %start translation_unit
 %%
@@ -150,9 +150,13 @@ postfix_expression
 }	| postfix_expression '(' argument_expression_list ')' {
    	FunctionCallNode *node = new FunctionCallNode($1, (ArgumentListNode*)$3);
    	$$ = node;
-}	| postfix_expression '.' IDENTIFIER
-	| postfix_expression PTR_OP IDENTIFIER
-	| postfix_expression INC_OP {
+}	| postfix_expression '.' IDENTIFIER {
+      AttributeReferenceNode *node = new AttributeReferenceNode($1, ".", $3);
+      $$ = node;
+}	| postfix_expression PTR_OP IDENTIFIER {
+      AttributeReferenceNode *node = new AttributeReferenceNode($1, "->", $3);
+      $$ = node;
+}	| postfix_expression INC_OP {
    	PostUnaryExpressionNode *node = new PostUnaryExpressionNode($1, "++");
    	$$ = node;
 }	| postfix_expression DEC_OP {
@@ -167,7 +171,6 @@ argument_expression_list
    	ArgumentListNode *node = new ArgumentListNode($1, NULL);
    	$$ = node;
 }	| argument_expression_list ',' assignment_expression {
-      //TODO solve list inversion
       ArgumentListNode *node = (ArgumentListNode*)$1; 
      	ArgumentListNode *arg = new ArgumentListNode($3, NULL);
    	$$ = node;
@@ -189,9 +192,14 @@ unary_expression
 }	| unary_operator cast_expression {
    	PreUnaryExpressionNode *node = new PreUnaryExpressionNode($1, $2);
    	$$ = node;
-}	| SIZEOF unary_expression  { $$ = NULL; }
-	| SIZEOF '(' type_name ')'  { $$ = NULL; }
-	| ALIGNOF '(' type_name ')'  { $$ = NULL; }
+}	| SIZEOF unary_expression  {
+      ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($2);
+      SizeOfNode *node = new SizeOfNode(expr);
+      $$ = node;
+}	| SIZEOF '(' type_name ')'  {
+      SizeOfNode *node = new SizeOfNode($3);
+      $$ = node;
+}	| ALIGNOF '(' type_name ')'  { $$ = NULL; }
 	;
 
 unary_operator
@@ -211,7 +219,7 @@ cast_expression
 }	;
 
 multiplicative_expression
-	: cast_expression
+	: cast_expression { $$ = $1; }
 	| multiplicative_expression '*' cast_expression {
    	BinaryExpressionNode *node = new BinaryExpressionNode($1,"*",$3);
    	$$ = node;
@@ -392,8 +400,6 @@ init_declarator_list
 	   DeclarationListNode *node = new DeclarationListNode($1, NULL);
 	   $$ = node;
 }	| init_declarator_list ',' init_declarator {
-	   //DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
-	   //$$ = node;
 	   DeclarationListNode *node = (DeclarationListNode *)$1;
 	   $$ = node;
 	   DeclarationListNode *decl = node;
@@ -509,8 +515,6 @@ struct_declaration_list
       DeclarationSequenceNode *node = new DeclarationSequenceNode($1, NULL);
       $$ = node;
 }	| struct_declaration_list struct_declaration {
-      //DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
-      //$$ = node;
       DeclarationSequenceNode *node = (DeclarationSequenceNode*)$1; 
      	DeclarationSequenceNode *decl = new DeclarationSequenceNode($2, NULL);
    	$$ = node;
@@ -553,8 +557,6 @@ struct_declarator_list
 	   DeclarationListNode *node = new DeclarationListNode($1, NULL);
 	   $$ = node;
 }	| struct_declarator_list ',' struct_declarator {
-	   //DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
-	   //$$ = node;
 	   DeclarationListNode *node = (DeclarationListNode*)$1; 
      	DeclarationListNode *decl = new DeclarationListNode($3, NULL);
    	$$ = node;
@@ -663,16 +665,48 @@ direct_declarator
       symbolTable.insertAtCurrentScope(idInfo);
       
 }	| '(' declarator ')' { $$ = $2; }
-	| direct_declarator '[' ']'
-	| direct_declarator '[' '*' ']'
-	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-	| direct_declarator '[' STATIC assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list '*' ']'
-	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list assignment_expression ']'
-	| direct_declarator '[' type_qualifier_list ']'
-	| direct_declarator '[' assignment_expression ']'
-	| direct_declarator '(' parameter_type_list ')' {
+	| direct_declarator '[' ']' {
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, $1, NULL);
+	   $$ = node;
+}	| direct_declarator '[' '*' ']' {
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, $1, NULL);
+	   $$ = node;
+}	| direct_declarator '[' STATIC type_qualifier_list assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, (TypeCompositionNode *)$4);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($5);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+      $$ = node;
+}	| direct_declarator '[' STATIC assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, NULL);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($4);
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+	   $$ = node;
+}	| direct_declarator '[' type_qualifier_list '*' ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$3;
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, NULL);
+      $$ = node;
+}	| direct_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, (TypeCompositionNode *)$3);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($5);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+      $$ = node;
+}	| direct_declarator '[' type_qualifier_list assignment_expression ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$3;
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($4);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+      $$ = node;
+}	| direct_declarator '[' type_qualifier_list ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$3;
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, NULL);
+      $$ = node;
+}	| direct_declarator '[' assignment_expression ']' {
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($3);
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, $1, expr);
+	   $$ = node;
+}	| direct_declarator '(' parameter_type_list ')' {
 	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode($1, (ParameterListNode *)$3);
 	   $$ = node;
 }	| direct_declarator '(' ')' {
@@ -724,8 +758,6 @@ parameter_list
 	   ParameterListNode *node = new ParameterListNode($1, NULL);
 	   $$ = node;
 }	| parameter_list ',' parameter_declaration {
-	   //ParameterListNode *node = new ParameterListNode($3, (ParameterListNode *)$1);
-	   //$$ = node;
 	   ParameterListNode *node = (ParameterListNode *)$1;
 	   $$ = node;
 	   ParameterListNode *parameter = node;
@@ -754,9 +786,13 @@ identifier_list
 
 type_name
 	: specifier_qualifier_list abstract_declarator {
-      
+      DeclarationSpecifierNode *specifier = new DeclarationSpecifierNode($1);
+      TypeDeclarationNode *node = new TypeDeclarationNode(specifier, $2);
+      $$ = node;
 }	| specifier_qualifier_list {
-      
+      DeclarationSpecifierNode *specifier = new DeclarationSpecifierNode($1);
+      TypeDeclarationNode *node = new TypeDeclarationNode(specifier, NULL);
+      $$ = node;
 }	;
 
 
@@ -869,8 +905,6 @@ block_item_list
 	   CompoundStatementNode *node = new CompoundStatementNode($1, NULL);
 	   $$ = node;
 }	| block_item_list block_item {
-	   //CompoundStatementNode *node = new CompoundStatementNode($2, (CompoundStatementNode *)$1);
-	   //$$ = node;
 	   CompoundStatementNode *node = (CompoundStatementNode*)$1; 
      	CompoundStatementNode *stmt = new CompoundStatementNode($2, NULL);
    	$$ = node;
@@ -954,13 +988,10 @@ translation_unit
 	   $$ = node;
 	   astRoot = node;
 }	| translation_unit external_declaration {
-	   //DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
-	   //$$ = node;
-	   //astRoot = node;
 	   DeclarationSequenceNode *node = (DeclarationSequenceNode*)$1; 
      	DeclarationSequenceNode *decl = new DeclarationSequenceNode($2, NULL);
    	$$ = node;
-   	astRoot = node;
+   	astRoot = node; //update AST root
    	DeclarationSequenceNode *declList = node;
    	while(declList->nextDeclaration()!=NULL){
    	   declList = declList->nextDeclaration();

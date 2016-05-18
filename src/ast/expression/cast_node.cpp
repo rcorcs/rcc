@@ -1,16 +1,16 @@
 #include "cast_node.h"
 
-CastNode::CastNode(TypeNode *type, ExpressionNode *operand)
+CastNode::CastNode(DeclarationNode *typeDeclation, ExpressionNode *operand)
    : ExpressionNode(NODE_TYPE_CAST) {
    _operand = operand;
-   _type = type;
+   _typeDeclation = typeDeclation;
 }
 
 ExpressionNode *CastNode::operand(){
    return _operand;
 }
 
-TypeNode *CastNode::type(){
-   return _type;
+DeclarationNode *CastNode::typeDeclation(){
+   return _typeDeclation;
 }
 

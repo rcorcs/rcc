@@ -41,6 +41,9 @@ void main(int argc, char **argv)
 #endif
    FUNC( a, (x = 5, ((b + 5) + x) ) , x*x );
 
+   if(c=='w')
+      printf("WINDOWS NAAAO\n");
+
    printf("%d\n", _A_);
    printf("%d\n", FUNCB(2));
    printf("%d\n", FUNCA(2));
@@ -54,6 +57,13 @@ struct MyArray {
 
 const int func()
 <%
+   struct MyArray arr;
+   arr.size = 2;
+   arr.data = (void *)malloc(arr.size*sizeof(int));
+   
+   int v[10];
+   for(int i = 0; i<10; i++)
+      v[i] = i+1;
    return 5;
 %>
 

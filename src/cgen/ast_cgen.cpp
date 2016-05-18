@@ -35,6 +35,12 @@ string ASTCGen::visit(Node *root){
       return visitArgumentListNode((ArgumentListNode *)root);
    case NODE_TYPE_ARRAY_REFERENCE:
       return visitArrayReferenceNode((ArrayReferenceNode *)root);
+   case NODE_TYPE_CAST:
+      return visitCastNode((CastNode *)root);      
+   case NODE_TYPE_ATTRIBUTE_REFERENCE:
+      return visitAttributeReferenceNode((AttributeReferenceNode *)root);
+   case NODE_TYPE_SIZEOF:
+      return visitSizeOfNode((SizeOfNode *)root);
 //STATEMENT:
    case NODE_TYPE_BREAK:
       return visitBreakNode((BreakNode *)root);
@@ -97,6 +103,10 @@ string ASTCGen::visit(Node *root){
       return visitAttributeInitializerNode((AttributeInitializerNode *)root);
    case NODE_TYPE_EXPRESSION_DECLARATION:
       return visitExpressionDeclarationNode((ExpressionDeclarationNode *)root);
+   case NODE_TYPE_TYPE_DECLARATION:
+      return visitTypeDeclarationNode((TypeDeclarationNode *)root);
+   case NODE_TYPE_ARRAY_DECLARATION:
+      return visitArrayDeclarationNode((ArrayDeclarationNode *)root);
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       return visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -174,43 +184,52 @@ string ASTCGen::visitArrayReferenceNode(ArrayReferenceNode *node){
 }
 
 string ASTCGen::visitCastNode(CastNode *node){
-   return "("+visit(node->type())+")("+visit(node->operand())+")";
+   return "("+visit(node->typeDeclation())+")("+visit(node->operand())+")";
+}
+
+
+string ASTCGen::visitAttributeReferenceNode(AttributeReferenceNode *node){
+   return visit(node->base())+node->operation()+node->identifier();
+}
+
+string ASTCGen::visitSizeOfNode(SizeOfNode *node){
+   return "sizeof ("+visit(node->typeDeclation())+")";
 }
 
 //STATEMENT:
 string ASTCGen::visitBreakNode(BreakNode *node){
-   return "break";
+   return "break;";
 }
 
 string ASTCGen::visitContinueNode(ContinueNode *node){
-   return "continue";
+   return "continue;";
 }
 
 string ASTCGen::visitReturnNode(ReturnNode *node){
-   return "return "+visit(node->expression());
+   return "return "+visit(node->expression())+";";
 }
 
 string ASTCGen::visitGotoNode(GotoNode *node){
-   return "goto "+node->label();
+   return "goto "+node->label()+";";
 }
 
 string ASTCGen::visitCompoundStatementNode(CompoundStatementNode *node){
-   string s = "{\n"+visit(node->statement())+";\n";
+   string s = "{\n"+visit(node->statement())+"\n";
    while(node->nextStatement()!=NULL){
       node = node->nextStatement();
-      s += visit(node->statement())+";\n";
+      s += visit(node->statement())+"\n";
    }
    s += "}\n";
    return s;
 }
 
 string ASTCGen::visitExpressionStatementNode(ExpressionStatementNode *node){
-   return visit(node->expression());
+   return visit(node->expression())+";";
 }
 
 
 string ASTCGen::visitDeclarationStatementNode(DeclarationStatementNode *node){
-   return visit(node->declaration());
+   return visit(node->declaration())+";";
 }
 
 string ASTCGen::visitIfNode(IfNode *node){
@@ -226,7 +245,7 @@ string ASTCGen::visitWhileNode(WhileNode *node){
 }
 
 string ASTCGen::visitDoWhileNode(DoWhileNode *node){
-   return "do"+visit(node->statement())+"while("+visit(node->condition())+")";
+   return "do"+visit(node->statement())+"while("+visit(node->condition())+");";
 }
 
 string ASTCGen::visitLabeledStatementNode(LabeledStatementNode *node){
@@ -242,12 +261,14 @@ string ASTCGen::visitCaseStatementNode(CaseStatementNode *node){
 }
 
 string ASTCGen::visitSkipNode(SkipNode *node){
-   return ";//skip\n";
+   return "/* skip */ ;";
 }
 
 //DECLARATION:
 string ASTCGen::visitDeclarationSequenceNode(DeclarationSequenceNode *node){
-   string s = visit(node->declaration())+";//declaration sequence\n";
+   string s = "";
+   if(node->declaration()!=NULL)
+      s = visit(node->declaration())+"\n";
    if(node->nextDeclaration()!=NULL)
       s += visit(node->nextDeclaration());
    return s;
@@ -311,7 +332,7 @@ string ASTCGen::visitDeclarationListNode(DeclarationListNode *node){
 }
 
 string ASTCGen::visitAttributeDeclarationNode(AttributeDeclarationNode *node){
-   return visit(node->specifier())+" "+visit(node->declarator());
+   return visit(node->specifier())+" "+visit(node->declarator())+";";
 }
 
 string ASTCGen::visitAttributeInitializerNode(AttributeInitializerNode *node){
@@ -326,6 +347,15 @@ string ASTCGen::visitExpressionDeclarationNode(ExpressionDeclarationNode *node){
    return visit(node->expression());
 }
 
+string ASTCGen::visitTypeDeclarationNode(TypeDeclarationNode *node){
+   return visit(node->specifier())+" "+visit(node->declarator());
+}
+
+string ASTCGen::visitArrayDeclarationNode(ArrayDeclarationNode *node){
+   return visit(node->declarator())+"["+visit(node->qualifiers())+" "+visit(node->size())+"]";
+}
+     
+     
 //TYPE:
 string ASTCGen::visitTypeCompositionNode(TypeCompositionNode *node){
    string s = visit(node->type());
@@ -351,10 +381,16 @@ string ASTCGen::visitStorageSpecifierNode(StorageSpecifierNode *node){
 }
 
 string ASTCGen::visitStructTypeNode(StructTypeNode *node){
-   return "struct "+node->identifier()+"{\n"+visit(node->declaration())+"\n};\n";
+   string s = "struct "+node->identifier();
+   if(node->declaration()!=NULL)
+      s += "{\n"+visit(node->declaration())+"\n};";
+   return s;
 }
 
 string ASTCGen::visitUnionTypeNode(UnionTypeNode *node){
-   return "union "+node->identifier()+"{\n"+visit(node->declaration())+"\n};\n";
+   string s = "union "+node->identifier();
+   if(node->declaration()!=NULL)
+      s += "{\n"+visit(node->declaration())+"\n};";
+   return s;
 }
 

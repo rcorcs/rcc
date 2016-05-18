@@ -21,6 +21,8 @@ public:
    void visitArgumentListNode(ArgumentListNode *node);
    void visitArrayReferenceNode(ArrayReferenceNode *node);
    void visitCastNode(CastNode *node);
+   void visitAttributeReferenceNode(AttributeReferenceNode *node);
+   void visitSizeOfNode(SizeOfNode *node);
 //STATEMENT:
    void visitBreakNode(BreakNode *node);
    void visitContinueNode(ContinueNode *node);
@@ -53,6 +55,8 @@ public:
    void visitAttributeDeclarationNode(AttributeDeclarationNode *node);
    void visitAttributeInitializerNode(AttributeInitializerNode *node);
    void visitExpressionDeclarationNode(ExpressionDeclarationNode *node);
+   void visitTypeDeclarationNode(TypeDeclarationNode *node);
+   void visitArrayDeclarationNode(ArrayDeclarationNode *node);
 //TYPE:
    void visitTypeCompositionNode(TypeCompositionNode *node);
    void visitPrimitiveTypeNode(PrimitiveTypeNode *node);

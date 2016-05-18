@@ -14,6 +14,8 @@
 #include "expression/expression_list_node.h"
 #include "expression/cast_node.h"
 #include "expression/conditional_expression_node.h"
+#include "expression/attribute_ref_node.h"
+#include "expression/sizeof_node.h"
 
 #include "statement/statement_node.h"
 #include "statement/break_node.h"
@@ -49,7 +51,8 @@
 #include "declaration/declaration_specifier_node.h"
 #include "declaration/attribute_initializer_node.h"
 #include "declaration/expression_declaration_node.h"
-
+#include "declaration/type_declaration_node.h"
+#include "declaration/array_declaration_node.h"
 
 #include "type/type_node.h"
 #include "type/type_composition_node.h"

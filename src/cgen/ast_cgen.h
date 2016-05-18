@@ -24,6 +24,8 @@ public:
    string visitArgumentListNode(ArgumentListNode *node);
    string visitArrayReferenceNode(ArrayReferenceNode *node);
    string visitCastNode(CastNode *node);
+   string visitAttributeReferenceNode(AttributeReferenceNode *node);
+   string visitSizeOfNode(SizeOfNode *node);
 //STATEMENT:
    string visitBreakNode(BreakNode *node);
    string visitContinueNode(ContinueNode *node);
@@ -56,6 +58,8 @@ public:
    string visitAttributeDeclarationNode(AttributeDeclarationNode *node);
    string visitAttributeInitializerNode(AttributeInitializerNode *node);
    string visitExpressionDeclarationNode(ExpressionDeclarationNode *node);
+   string visitTypeDeclarationNode(TypeDeclarationNode *node);
+   string visitArrayDeclarationNode(ArrayDeclarationNode *node);
 //TYPE:
    string visitTypeCompositionNode(TypeCompositionNode *node);
    string visitPrimitiveTypeNode(PrimitiveTypeNode *node);
