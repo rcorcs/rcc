@@ -3,21 +3,15 @@
 
 
 #include "declaration_node.h"
-#include "declarator_node.h"
-#include "../type/type_node.h"
-#include "../expression/expression_node.h"
 
 class AttributeDeclarationNode : public DeclarationNode {
 public:
-   AttributeDeclarationNode(TypeNode *type, DeclaratorNode *declarator, ExpressionNode *init);
-   TypeNode *type();
-   void type(TypeNode *t);
-   DeclaratorNode *declarator();
-   ExpressionNode *initializer();
+   AttributeDeclarationNode(DeclarationNode *specifier, DeclarationNode *declarator);
+   DeclarationNode *specifier();
+   DeclarationNode *declarator();
 private:
-   TypeNode *_type;
-   DeclaratorNode *_declarator;
-   ExpressionNode *_init;
+   DeclarationNode *_specifier;
+   DeclarationNode *_declarator;
 };
 
 #endif

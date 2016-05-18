@@ -50,12 +50,17 @@ public:
    void visitVariableDeclarationNode(VariableDeclarationNode *node);
    void visitDeclarationSpecifierNode(DeclarationSpecifierNode *node);
    void visitDeclarationListNode(DeclarationListNode *node);
+   void visitAttributeDeclarationNode(AttributeDeclarationNode *node);
+   void visitAttributeInitializerNode(AttributeInitializerNode *node);
+   void visitExpressionDeclarationNode(ExpressionDeclarationNode *node);
 //TYPE:
    void visitTypeCompositionNode(TypeCompositionNode *node);
    void visitPrimitiveTypeNode(PrimitiveTypeNode *node);
    void vistiQualifierTypeNode(QualifierTypeNode *node);
    void visitFunctionSpecifierNode(FunctionSpecifierNode *node);
    void visitStorageSpecifierNode(StorageSpecifierNode *node);
+   void visitStructTypeNode(StructTypeNode *node);
+   void visitUnionTypeNode(UnionTypeNode *node);
 };
 
 #endif

@@ -1,25 +1,16 @@
 #include "attribute_declaration_node.h"
 
-AttributeDeclarationNode::AttributeDeclarationNode(TypeNode *type, DeclaratorNode *declarator, ExpressionNode *init)
+AttributeDeclarationNode::AttributeDeclarationNode(DeclarationNode *specifier, DeclarationNode *declarator)
    : DeclarationNode(NODE_TYPE_ATTRIBUTE_DECLARATION) {
-   _type = type;
+   _specifier = specifier;
    _declarator = declarator;
-   _init = init;
 }
 
-TypeNode *AttributeDeclarationNode::type(){
-   return _type;
+DeclarationNode *AttributeDeclarationNode::specifier(){
+   return _specifier;
 }
 
-void AttributeDeclarationNode::type(TypeNode *t){
-   _type = t;
-}
-
-DeclaratorNode *AttributeDeclarationNode::declarator(){
+DeclarationNode *AttributeDeclarationNode::declarator(){
    return _declarator;
-}
-
-ExpressionNode *AttributeDeclarationNode::initializer(){
-   return _init;
 }
 

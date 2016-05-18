@@ -53,12 +53,17 @@ public:
    string visitVariableDeclarationNode(VariableDeclarationNode *node);
    string visitDeclarationSpecifierNode(DeclarationSpecifierNode *node);
    string visitDeclarationListNode(DeclarationListNode *node);
+   string visitAttributeDeclarationNode(AttributeDeclarationNode *node);
+   string visitAttributeInitializerNode(AttributeInitializerNode *node);
+   string visitExpressionDeclarationNode(ExpressionDeclarationNode *node);
 //TYPE:
    string visitTypeCompositionNode(TypeCompositionNode *node);
    string visitPrimitiveTypeNode(PrimitiveTypeNode *node);
    string vistiQualifierTypeNode(QualifierTypeNode *node);
    string visitFunctionSpecifierNode(FunctionSpecifierNode *node);
    string visitStorageSpecifierNode(StorageSpecifierNode *node);
+   string visitStructTypeNode(StructTypeNode *node);
+   string visitUnionTypeNode(UnionTypeNode *node);
 };
 
 #endif

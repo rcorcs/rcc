@@ -130,6 +130,15 @@ void ASTVisitor::visit(Node *root){
    case NODE_TYPE_DECLARATION_LIST:
       visitDeclarationListNode((DeclarationListNode *)root);
       break;
+   case NODE_TYPE_ATTRIBUTE_DECLARATION:
+      visitAttributeDeclarationNode((AttributeDeclarationNode *)root);
+      break;
+   case NODE_TYPE_ATTRIBUTE_INITIALIZER:
+      visitAttributeInitializerNode((AttributeInitializerNode *)root);
+      break;
+   case NODE_TYPE_EXPRESSION_DECLARATION:
+      visitExpressionDeclarationNode((ExpressionDeclarationNode *)root);
+      break;
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -145,6 +154,12 @@ void ASTVisitor::visit(Node *root){
       break;
    case NODE_TYPE_STORAGE_SPECIFIER:
       visitStorageSpecifierNode((StorageSpecifierNode *)root);
+      break;
+   case NODE_TYPE_STRUCT_TYPE:
+      visitStructTypeNode((StructTypeNode *)root);
+      break;
+   case NODE_TYPE_UNION_TYPE:
+      visitUnionTypeNode((UnionTypeNode *)root);
       break;
    default:
       cout << "Unknown node type." << endl;
@@ -422,6 +437,27 @@ void ASTVisitor::visitDeclarationListNode(DeclarationListNode *node){
    visit(node->nextDeclaration());
 }
 
+void ASTVisitor::visitAttributeDeclarationNode(AttributeDeclarationNode *node){
+   cout << "Visiting AttributeDeclarationNode" << endl;
+   cout << "specifier:" << endl;
+   visit(node->specifier());
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+}
+
+void ASTVisitor::visitAttributeInitializerNode(AttributeInitializerNode *node){
+   cout << "Visiting AttributeInitializerNode" << endl;
+   cout << "declarator:" << endl;
+   visit(node->declarator());
+   cout << "initializer:" << endl;
+   visit(node->initializer());   
+}
+
+void ASTVisitor::visitExpressionDeclarationNode(ExpressionDeclarationNode *node){
+   cout << "Visiting ExpressionDeclarationNode" << endl;
+   visit(node->expression());
+}
+   
 //TYPE:
 void ASTVisitor::visitTypeCompositionNode(TypeCompositionNode *node){
    cout << "Visiting TypeCompositionNode" << endl;
@@ -447,6 +483,20 @@ void ASTVisitor::visitFunctionSpecifierNode(FunctionSpecifierNode *node){
 void ASTVisitor::visitStorageSpecifierNode(StorageSpecifierNode *node){
    cout << "Visiting StorageSpecifierNode" << endl;
    cout << "Type: " << storageSpecifierName(node->storageSpecifier()) << endl;
+}
+
+void ASTVisitor::visitStructTypeNode(StructTypeNode *node){
+   cout << "Visiting StructTypeNode" << endl;
+   cout << "ID: " << node->identifier() << endl;
+   cout << "Declaration:" << endl;
+   visit(node->declaration());
+}
+
+void ASTVisitor::visitUnionTypeNode(UnionTypeNode *node){
+   cout << "Visiting UnionTypeNode" << endl;
+   cout << "ID: " << node->identifier() << endl;
+   cout << "Declaration:" << endl;
+   visit(node->declaration());
 }
 
 

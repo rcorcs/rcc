@@ -91,6 +91,12 @@ string ASTCGen::visit(Node *root){
       return visitDeclarationSpecifierNode((DeclarationSpecifierNode *)root);
    case NODE_TYPE_DECLARATION_LIST:
       return visitDeclarationListNode((DeclarationListNode *)root);
+   case NODE_TYPE_ATTRIBUTE_DECLARATION:
+      return visitAttributeDeclarationNode((AttributeDeclarationNode *)root);
+   case NODE_TYPE_ATTRIBUTE_INITIALIZER:
+      return visitAttributeInitializerNode((AttributeInitializerNode *)root);
+   case NODE_TYPE_EXPRESSION_DECLARATION:
+      return visitExpressionDeclarationNode((ExpressionDeclarationNode *)root);
 //TYPE:
    case NODE_TYPE_TYPE_COMPOSITION:
       return visitTypeCompositionNode((TypeCompositionNode *)root);
@@ -102,6 +108,10 @@ string ASTCGen::visit(Node *root){
       return visitFunctionSpecifierNode((FunctionSpecifierNode *)root);
    case NODE_TYPE_STORAGE_SPECIFIER:
       return visitStorageSpecifierNode((StorageSpecifierNode *)root);
+   case NODE_TYPE_STRUCT_TYPE:
+      return visitStructTypeNode((StructTypeNode *)root);
+   case NODE_TYPE_UNION_TYPE:
+      return visitUnionTypeNode((UnionTypeNode *)root);
    default:
       cout << "Unknown node type." << endl;
    }
@@ -300,6 +310,22 @@ string ASTCGen::visitDeclarationListNode(DeclarationListNode *node){
    return s;
 }
 
+string ASTCGen::visitAttributeDeclarationNode(AttributeDeclarationNode *node){
+   return visit(node->specifier())+" "+visit(node->declarator());
+}
+
+string ASTCGen::visitAttributeInitializerNode(AttributeInitializerNode *node){
+   string s = visit(node->declarator());
+   if(node->initializer()){
+      s += " : "+visit(node->initializer());
+   }
+   return s;
+}
+
+string ASTCGen::visitExpressionDeclarationNode(ExpressionDeclarationNode *node){
+   return visit(node->expression());
+}
+
 //TYPE:
 string ASTCGen::visitTypeCompositionNode(TypeCompositionNode *node){
    string s = visit(node->type());
@@ -322,5 +348,13 @@ string ASTCGen::visitFunctionSpecifierNode(FunctionSpecifierNode *node){
 
 string ASTCGen::visitStorageSpecifierNode(StorageSpecifierNode *node){
    return storageSpecifierName(node->storageSpecifier());
+}
+
+string ASTCGen::visitStructTypeNode(StructTypeNode *node){
+   return "struct "+node->identifier()+"{\n"+visit(node->declaration())+"\n};\n";
+}
+
+string ASTCGen::visitUnionTypeNode(UnionTypeNode *node){
+   return "union "+node->identifier()+"{\n"+visit(node->declaration())+"\n};\n";
 }
 

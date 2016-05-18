@@ -509,18 +509,26 @@ struct_declaration_list
       DeclarationSequenceNode *node = new DeclarationSequenceNode($1, NULL);
       $$ = node;
 }	| struct_declaration_list struct_declaration {
-      DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
-      $$ = node;
+      //DeclarationSequenceNode *node = new DeclarationSequenceNode($2, (DeclarationSequenceNode *)$1);
+      //$$ = node;
+      DeclarationSequenceNode *node = (DeclarationSequenceNode*)$1; 
+     	DeclarationSequenceNode *decl = new DeclarationSequenceNode($2, NULL);
+   	$$ = node;
+   	DeclarationSequenceNode *declList = node;
+   	while(declList->nextDeclaration()!=NULL){
+   	   declList = declList->nextDeclaration();
+      }
+      declList->nextDeclaration(decl);
 }	;
 
 struct_declaration
 	: specifier_qualifier_list ';' {	/* for anonymous struct/union */
-	   AttributeDeclarationNode *node = new AttributeDeclarationNode($1, NULL, NULL);
+      DeclarationSpecifierNode *specifier = new DeclarationSpecifierNode($1);
+	   AttributeDeclarationNode *node = new AttributeDeclarationNode(specifier, NULL);
 	   $$ = node;
 }	| specifier_qualifier_list struct_declarator_list ';' {
-      TypeNode *type = $1;
-	   DeclarationListNode *node = (DeclarationListNode*)$2;
-	   //TODO set type into node
+      DeclarationSpecifierNode *specifier = new DeclarationSpecifierNode($1);
+	   AttributeDeclarationNode *node = new AttributeDeclarationNode(specifier, $2);
 	   $$ = node;
 }	| static_assert_declaration { $$ = NULL; }
 	;
@@ -545,19 +553,29 @@ struct_declarator_list
 	   DeclarationListNode *node = new DeclarationListNode($1, NULL);
 	   $$ = node;
 }	| struct_declarator_list ',' struct_declarator {
-	   DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
-	   $$ = node;
+	   //DeclarationListNode *node = new DeclarationListNode($3, (DeclarationListNode*)$1);
+	   //$$ = node;
+	   DeclarationListNode *node = (DeclarationListNode*)$1; 
+     	DeclarationListNode *decl = new DeclarationListNode($3, NULL);
+   	$$ = node;
+   	DeclarationListNode *declList = node;
+   	while(declList->nextDeclaration()!=NULL){
+   	   declList = declList->nextDeclaration();
+      }
+      declList->nextDeclaration(decl);
 }	;
 
 struct_declarator
 	: ':' constant_expression {
-	   AttributeDeclarationNode *node = new AttributeDeclarationNode(NULL, NULL, $2);
+      ExpressionDeclarationNode *init = new ExpressionDeclarationNode($2);
+	   AttributeInitializerNode *node = new AttributeInitializerNode(NULL, init);
 	   $$ = node;
 }	| declarator ':' constant_expression {
-	   AttributeDeclarationNode *node = new AttributeDeclarationNode(NULL, (DeclaratorNode *)$1, $3);
+      ExpressionDeclarationNode *init = new ExpressionDeclarationNode($3);
+	   AttributeInitializerNode *node = new AttributeInitializerNode($1, init);
 	   $$ = node;
 }	| declarator {
-	   AttributeDeclarationNode *node = new AttributeDeclarationNode(NULL, (DeclaratorNode *)$1, NULL);
+	   AttributeInitializerNode *node = new AttributeInitializerNode($1, NULL);
 	   $$ = node;
 }	;
 
@@ -790,8 +808,10 @@ direct_abstract_declarator
 initializer
 	: '{' initializer_list '}'
 	| '{' initializer_list ',' '}'
-	| assignment_expression
-	;
+	| assignment_expression {
+	   ExpressionDeclarationNode *node = new ExpressionDeclarationNode($1);
+	   $$ = node;
+}	;
 
 initializer_list
 	: designation initializer

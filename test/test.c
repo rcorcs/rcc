@@ -47,7 +47,10 @@ void main(int argc, char **argv)
 
 }
 
-
+struct MyArray {
+   int size;
+   void *data;
+};
 
 const int func()
 <%
