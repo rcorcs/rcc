@@ -819,27 +819,93 @@ abstract_declarator
 
 direct_abstract_declarator
 	: '(' abstract_declarator ')' { $$ = $2; }
-	| '[' ']'
-	| '[' '*' ']'
-	| '[' STATIC type_qualifier_list assignment_expression ']'
-	| '[' STATIC assignment_expression ']'
-	| '[' type_qualifier_list STATIC assignment_expression ']'
-	| '[' type_qualifier_list assignment_expression ']'
-	| '[' type_qualifier_list ']'
-	| '[' assignment_expression ']'
-	| direct_abstract_declarator '[' ']'
-	| direct_abstract_declarator '[' '*' ']'
-	| direct_abstract_declarator '[' STATIC type_qualifier_list assignment_expression ']'
-	| direct_abstract_declarator '[' STATIC assignment_expression ']'
-	| direct_abstract_declarator '[' type_qualifier_list assignment_expression ']'
-	| direct_abstract_declarator '[' type_qualifier_list STATIC assignment_expression ']'
-	| direct_abstract_declarator '[' type_qualifier_list ']'
-	| direct_abstract_declarator '[' assignment_expression ']'
-	| '(' ')'
-	| '(' parameter_type_list ')'
-	| direct_abstract_declarator '(' ')'
-	| direct_abstract_declarator '(' parameter_type_list ')'
-	;
+	| '[' ']' {
+   	ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, NULL, NULL);
+	   $$ = node;
+}	| '[' '*' ']' {
+   	ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, NULL, NULL);
+	   $$ = node;
+}	| '[' STATIC type_qualifier_list assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, (TypeCompositionNode *)$3);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($4);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, NULL, expr);
+      $$ = node;
+}	| '[' STATIC assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, NULL);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($3);
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, NULL, expr);
+	   $$ = node;
+}	| '[' type_qualifier_list STATIC assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, (TypeCompositionNode *)$2);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($4);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, NULL, expr);
+      $$ = node;
+}	| '[' type_qualifier_list assignment_expression ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$2;
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($3);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, NULL, expr);
+      $$ = node;
+}	| '[' type_qualifier_list ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$2;
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, NULL, NULL);
+      $$ = node;
+}	| '[' assignment_expression ']' {
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($2);
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, NULL, expr);
+	   $$ = node;
+}	| direct_abstract_declarator '[' ']' {
+   	ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, $1, NULL);
+	   $$ = node;
+}	| direct_abstract_declarator '[' '*' ']' {
+   	ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, $1, NULL);
+	   $$ = node;
+}	| direct_abstract_declarator '[' STATIC type_qualifier_list assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, (TypeCompositionNode *)$4);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($5);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+      $$ = node;
+}	| direct_abstract_declarator '[' STATIC assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, NULL);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($4);
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+	   $$ = node;
+}	| direct_abstract_declarator '[' type_qualifier_list assignment_expression ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$3;
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($4);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+      $$ = node;
+}	| direct_abstract_declarator '[' type_qualifier_list STATIC assignment_expression ']' {
+      StorageSpecifierNode *storageSpecifier = new StorageSpecifierNode(StorageSpecifier::TYPE_STATIC);
+      TypeCompositionNode *qualifiers = new TypeCompositionNode(storageSpecifier, (TypeCompositionNode *)$3);
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($5);
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, expr);
+      $$ = node;
+}	| direct_abstract_declarator '[' type_qualifier_list ']' {
+      TypeCompositionNode *qualifiers = (TypeCompositionNode *)$3;
+      ArrayDeclarationNode *node = new ArrayDeclarationNode(qualifiers, $1, NULL);
+      $$ = node;
+}	| direct_abstract_declarator '[' assignment_expression ']' {
+	   ExpressionDeclarationNode *expr = new ExpressionDeclarationNode($3);
+	   ArrayDeclarationNode *node = new ArrayDeclarationNode(NULL, $1, expr);
+	   $$ = node;
+}	| '(' ')' {
+	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode(NULL, NULL);
+	   $$ = node;
+}	| '(' parameter_type_list ')' {
+	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode(NULL, (ParameterListNode *)$2);
+	   $$ = node;
+}	| direct_abstract_declarator '(' ')' {
+	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode($1, NULL);
+	   $$ = node;      
+}	| direct_abstract_declarator '(' parameter_type_list ')' {
+	   FunctionDeclaratorNode *node = new FunctionDeclaratorNode($1, (ParameterListNode *)$3);
+	   $$ = node;
+}	;
 
 initializer
 	: '{' initializer_list '}'
