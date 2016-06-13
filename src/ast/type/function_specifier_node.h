@@ -2,12 +2,7 @@
 #define RCC_AST_FUNCTION_SPECIFIER_NODE_H
 
 #include "type_node.h"
-
-enum FunctionSpecifier
-{
-   TYPE_INLINE,
-   TYPE_NORETURN,
-};
+#include "../../types/function_specifier.h"
 
 class FunctionSpecifierNode : public TypeNode {
 public:

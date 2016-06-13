@@ -1,12 +1,11 @@
 #ifndef RCC_STRUCTTYPE_H
 #define RCC_STRUCTTYPE_H
-
+/*
 #include <map>
 using std::map;
 using std::pair;
 
-#include "primitivetypes.h"
-#include "../idinfos.h"
+
 
 #define STRUCT_TYPE 200000
 class structtype : public datatype {
@@ -25,5 +24,6 @@ protected:
    const char *_sname;
    map<string, idinfo*> _attr;
 };
+*/
 
 #endif

@@ -2,14 +2,7 @@
 #define RCC_AST_QUALIFIER_TYPE_NODE_H
 
 #include "type_node.h"
-
-enum TypeQualifier
-{
-   TYPE_CONST,
-   TYPE_RESTRICT,
-   TYPE_VOLATILE,
-   TYPE_ATOMIC,
-};
+#include "../../types/type_qualifier.h"
 
 class QualifierTypeNode : public TypeNode {
 public:

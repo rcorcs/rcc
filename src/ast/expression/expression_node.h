@@ -3,9 +3,18 @@
 
 #include "../node.h"
 
+#include <string>
+
+using std::string;
+
 class ExpressionNode : public Node {
 public:
    ExpressionNode(NodeType type);
+   
+   string evaluationType();
+   void evaluationType(string evalType);
+private:
+   string _evalType;
 };
 
 #endif

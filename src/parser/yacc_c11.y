@@ -16,8 +16,10 @@ int yylex();
 // Contagem e saída de erros.
 void yyerror(const char *);
  
-extern SymbolTable symbolTable;
+//extern SymbolTable symbolTable;
+//extern IdentifierInformationBuilder idInfoBuilder;
 Node *astRoot = NULL;
+
 %}
 
 %union {
@@ -362,6 +364,13 @@ declaration
       DeclarationSpecifierNode *specifier = new DeclarationSpecifierNode($1);
       VariableDeclarationNode *node = new VariableDeclarationNode(specifier, $2);
       $$ = node;
+      /*
+      IdentifierInformation *idInfo;
+      while( (idInfo = idInfoBuilder.build())!=NULL ){
+         printf("NEW VARIABLE ID: %s\n", idInfo->identifier().c_str());
+         delete idInfo;
+      }
+      */
 }	| static_assert_declaration {
       
 }	;
@@ -654,15 +663,20 @@ direct_declarator
 	: IDENTIFIER {
       IdentifierDeclarationNode *node = new IdentifierDeclarationNode($1);
       $$ = node;
-      
+      /*
       if(symbolTable.isAtCurrentScope($1)){
          printf("Identifier %s is already defined\n", $1);
          yyerror("Duplicate definition.\n");
       }
       printf("adding ID %s to symtab in scope %d.\n", $1, symbolTable.scopeCount());
+
+      //idInfoBuilder.identifier($1);
+      idInfoBuilder.addIdentifier($1);
+      //printf("NEW ID: %s %s\n",idInfoBuilder.idType().c_str(), idInfoBuilder.identifier().c_str());
       IdentifierInformation *idInfo = new IdentifierInformation($1);
-      
+      //idInfo->identifier($1);
       symbolTable.insertAtCurrentScope(idInfo);
+      */
       
 }	| '(' declarator ')' { $$ = $2; }
 	| direct_declarator '[' ']' {
@@ -963,7 +977,7 @@ labeled_statement
 
 compound_statement
 	: '{' '}' { $$ = NULL; }
-	| '{' {printf("begin scope\n"); ::symbolTable.pushScope();} block_item_list {delete ::symbolTable.popScope();printf("end scope\n");}'}' { $$ = $3; }
+	| '{' block_item_list '}' { $$ = $2; }
 	;
 
 block_item_list

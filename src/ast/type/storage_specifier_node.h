@@ -2,15 +2,7 @@
 #define RCC_AST_STORAGE_SPECIFIER_NODE_H
 
 #include "type_node.h"
-
-enum StorageSpecifier
-{
-   TYPE_EXTERN,
-	TYPE_STATIC,
-	TYPE_THREAD_LOCAL,
-	TYPE_AUTO,
-	TYPE_REGISTER,
-};
+#include "../../types/storage_specifier.h"
 
 class StorageSpecifierNode : public TypeNode {
 public:

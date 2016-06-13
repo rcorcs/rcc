@@ -1,10 +1,16 @@
 #ifndef RCC_SYMTAB_IDENTIFIER_INFORMATION_H
 #define RCC_SYMTAB_IDENTIFIER_INFORMATION_H
 
-#include "../types/data_type.h"
 
 #include <string>
 using std::string;
+
+enum IdentifierType {
+   IDENTIFIER_TYPE_VARIABLE,
+   IDENTIFIER_TYPE_FUNCTION,
+   IDENTIFIER_TYPE_STRUCT,
+   IDENTIFIER_TYPE_UNION,
+};
 
 /**
 
@@ -24,15 +30,10 @@ public:
 
    unsigned int scopeLevel() const;
    void scopeLevel(const unsigned int level);
-   
-   void type(DataType *t);
-   DataType *type();
-   
 private:
    string _id;
    unsigned int _scopeLevel;
-   DataType *_type;
-   //string _typeStr;
+   IdentifierType _type;
 };
 
 #endif

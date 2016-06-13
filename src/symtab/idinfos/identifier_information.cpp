@@ -1,7 +1,7 @@
 #include "identifier_information.h"
 
 IdentifierInformation::IdentifierInformation(string id){
-   _type = NULL;
+   _type = type;
    _id = id;
    _scopeLevel = 0;
 }
@@ -22,13 +22,4 @@ unsigned int IdentifierInformation::scopeLevel() const {
 void IdentifierInformation::scopeLevel(const unsigned int level) {
    _scopeLevel = level;
 }
-
-void IdentifierInformation::type(DataType *t){
-   _type = t;
-}
-   
-DataType *IdentifierInformation::type(){
-   return _type;
-}
-   
 

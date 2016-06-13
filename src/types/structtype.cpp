@@ -1,5 +1,5 @@
 #include "structtype.h"
-
+/*
 structtype::structtype(const char *n)
 {
     _type = STRUCT_TYPE;
@@ -31,3 +31,4 @@ size_t structtype::size()
 {
    return 0;
 }
+*/

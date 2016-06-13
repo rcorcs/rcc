@@ -1,7 +1,13 @@
 #ifndef RCC_SYMBOL_TABLE_H
 #define RCC_SYMBOL_TABLE_H
 
+//#include "idinfos/identifier_information_builder.h"
+
 #include "identifier_information.h"
+/*#include "idinfos/variable_information.h"
+#include "idinfos/function_information.h"
+#include "idinfos/struct_information.h"
+#include "idinfos/union_information.h"*/
 #include "scope.h"
 
 
