@@ -229,7 +229,8 @@ string ASTCGen::visitExpressionStatementNode(ExpressionStatementNode *node){
 
 
 string ASTCGen::visitDeclarationStatementNode(DeclarationStatementNode *node){
-   return visit(node->declaration())+";";
+   //return visit(node->declaration())+";";
+   return visit(node->declaration());
 }
 
 string ASTCGen::visitIfNode(IfNode *node){
@@ -317,7 +318,7 @@ string ASTCGen::visitAssignmentNode(AssignmentNode *node){
 }
 
 string ASTCGen::visitVariableDeclarationNode(VariableDeclarationNode *node){
-   return visit(node->specifier())+" "+visit(node->declarator());
+   return visit(node->specifier())+" "+visit(node->declarator())+";";
 }
 
 string ASTCGen::visitDeclarationSpecifierNode(DeclarationSpecifierNode *node){

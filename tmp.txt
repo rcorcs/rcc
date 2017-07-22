@@ -1,0 +1,718 @@
+/*
+define BLA  {
+5
+}
+*/
+/*
+define _BLA_2_  {
+x = 2; 
+   x += BLA; 
+   x += 3
+}
+*/
+/*
+define FUNC X, Y, Z {
+X = Y + Z
+}
+*/
+/*
+define _A_  {
+5
+}
+*/
+/*
+define FUNCB _A_ {
+( (_A_) + 7 )
+}
+*/
+/*
+define FUNCA _A_ {
+(_A_) + FUNCB( (_A_) + 1 )
+}
+*/
+defining function.
+defining function.
+Visiting DeclarationSequenceNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting FunctionDeclaratorNode
+declarator:
+Visiting IdentifierDeclarationNode
+ID: func
+parameters:
+Visiting DeclarationSequenceNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting FunctionDeclaratorNode
+declarator:
+Visiting IdentifierDeclarationNode
+ID: functionA
+parameters:
+Visiting DeclarationSequenceNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting FunctionDeclaratorNode
+declarator:
+Visiting IdentifierDeclarationNode
+ID: functionB
+parameters:
+Visiting DeclarationSequenceNode
+Visiting FunctionDeclarationNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: void
+Visiting DeclaratorNode
+Visiting FunctionDeclaratorNode
+declarator:
+Visiting IdentifierDeclarationNode
+ID: main
+parameters:
+Visiting ParameterListNode
+Visiting ParameterDeclarationNode
+type:
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: argc
+Visiting ParameterListNode
+Visiting ParameterDeclarationNode
+type:
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: char
+declarator:
+Visiting PointerDeclaratorNode
+qualifiers:
+declaration:
+Visiting PointerDeclaratorNode
+qualifiers:
+declaration:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: argv
+Visiting CompoundStatementNode
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: char
+declarator:
+Visiting DeclarationListNode
+Visiting AssignmentNode
+declarator:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: c
+initializer:
+Visiting ExpressionDeclarationNode
+Visiting IntegerLiteralNode
+INT LITERAL: 'a'
+Visiting CompoundStatementNode
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: char
+declarator:
+Visiting DeclarationListNode
+Visiting AssignmentNode
+declarator:
+Visiting PointerDeclaratorNode
+qualifiers:
+declaration:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: str
+initializer:
+Visiting ExpressionDeclarationNode
+Visiting StringLiteralNode
+STRING LITERAL: "blabla"
+Visiting CompoundStatementNode
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting AssignmentNode
+declarator:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: x
+initializer:
+Visiting ExpressionDeclarationNode
+Visiting IntegerLiteralNode
+INT LITERAL: 0
+Visiting CompoundStatementNode
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: a
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: b
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: a
+Operation: =
+Right Operand: 
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: b
+Operation: =
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 2
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: x
+Operation: =
+Right Operand: 
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: a
+Operation: +
+Right Operand: 
+Visiting IdentifierNode
+ID: b
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: x
+Operation: =
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 2
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: x
+Operation: +=
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 5
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: x
+Operation: +=
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 3
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: c
+Operation: =
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 'l'
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: str
+Operation: =
+Right Operand: 
+Visiting StringLiteralNode
+STRING LITERAL: "LINUX"
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: a
+Operation: =
+Right Operand: 
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ExpressionListNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: b
+Operation: +
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 5
+Operation: +
+Right Operand: 
+Visiting IdentifierNode
+ID: x
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: x
+Operation: =
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 5
+Operation: +
+Right Operand: 
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: x
+Operation: *
+Right Operand: 
+Visiting IdentifierNode
+ID: x
+Visiting CompoundStatementNode
+Visiting IfNode
+condition:
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: c
+Operation: ==
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 'w'
+thenStatement:
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting FunctionCallNode
+address: 
+Visiting IdentifierNode
+ID: printf
+arguments: 
+Visiting ArgumentListNode
+Visiting StringLiteralNode
+STRING LITERAL: "WINDOWS NAAAO\n"
+elseStatement:
+Visiting SkipNode
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting FunctionCallNode
+address: 
+Visiting IdentifierNode
+ID: printf
+arguments: 
+Visiting ArgumentListNode
+Visiting StringLiteralNode
+STRING LITERAL: "%d\n"
+Visiting ArgumentListNode
+Visiting IntegerLiteralNode
+INT LITERAL: 5
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting FunctionCallNode
+address: 
+Visiting IdentifierNode
+ID: printf
+arguments: 
+Visiting ArgumentListNode
+Visiting StringLiteralNode
+STRING LITERAL: "%d\n"
+Visiting ArgumentListNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ExpressionListNode
+Visiting IntegerLiteralNode
+INT LITERAL: 2
+Operation: +
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 7
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting FunctionCallNode
+address: 
+Visiting IdentifierNode
+ID: printf
+arguments: 
+Visiting ArgumentListNode
+Visiting StringLiteralNode
+STRING LITERAL: "%d\n"
+Visiting ArgumentListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ExpressionListNode
+Visiting IntegerLiteralNode
+INT LITERAL: 2
+Operation: +
+Right Operand: 
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ExpressionListNode
+Visiting IntegerLiteralNode
+INT LITERAL: 2
+Operation: +
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 1
+Operation: +
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 7
+Visiting DeclarationSequenceNode
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting StructTypeNode
+ID: MyArray
+Declaration:
+Visiting DeclarationSequenceNode
+Visiting AttributeDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting AttributeInitializerNode
+declarator:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: size
+initializer:
+Visiting DeclarationSequenceNode
+Visiting AttributeDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: void
+declarator:
+Visiting DeclarationListNode
+Visiting AttributeInitializerNode
+declarator:
+Visiting PointerDeclaratorNode
+qualifiers:
+declaration:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: data
+initializer:
+Visiting DeclarationSequenceNode
+Visiting FunctionDeclarationNode
+Visiting TypeCompositionNode
+Visiting QualifierTypeNode
+Type: const
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+Visiting DeclaratorNode
+Visiting FunctionDeclaratorNode
+declarator:
+Visiting IdentifierDeclarationNode
+ID: func
+parameters:
+Visiting CompoundStatementNode
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting StructTypeNode
+ID: MyArray
+Declaration:
+declarator:
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: arr
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting AttributeReferenceNode
+base: 
+Visiting IdentifierNode
+ID: arr
+operation: .
+ID: size
+Operation: =
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 2
+Visiting CompoundStatementNode
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting AttributeReferenceNode
+base: 
+Visiting IdentifierNode
+ID: arr
+operation: .
+ID: data
+Operation: =
+Right Operand: 
+Visiting CastNode
+type: 
+Visiting TypeDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: void
+declarator:
+Visiting DeclaratorNode
+Visiting PointerDeclaratorNode
+qualifiers:
+declaration:
+operand: 
+Visiting FunctionCallNode
+address: 
+Visiting IdentifierNode
+ID: malloc
+arguments: 
+Visiting ArgumentListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting AttributeReferenceNode
+base: 
+Visiting IdentifierNode
+ID: arr
+operation: .
+ID: size
+Operation: *
+Right Operand: 
+Visiting SizeOfNode
+type: 
+Visiting TypeDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting CompoundStatementNode
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting DeclaratorNode
+Visiting ArrayDeclarationNode
+declarator:
+Visiting IdentifierDeclarationNode
+ID: v
+qualifiers:
+size:
+Visiting ExpressionDeclarationNode
+Visiting IntegerLiteralNode
+INT LITERAL: 10
+Visiting CompoundStatementNode
+Visiting ForNode
+initialize:
+Visiting DeclarationStatementNode
+Visiting VariableDeclarationNode
+specifier:
+Visiting DeclarationSpecifierNode
+Visiting TypeCompositionNode
+Visiting PrimitiveTypeNode
+Type: int
+declarator:
+Visiting DeclarationListNode
+Visiting AssignmentNode
+declarator:
+Visiting DeclaratorNode
+Visiting IdentifierDeclarationNode
+ID: i
+initializer:
+Visiting ExpressionDeclarationNode
+Visiting IntegerLiteralNode
+INT LITERAL: 0
+condition:
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: i
+Operation: <
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 10
+step:
+Visiting ExpressionListNode
+Visiting PostUnaryExpressionNode
+Operation: ++
+Operand: 
+Visiting IdentifierNode
+ID: i
+statement:
+Visiting ExpressionStatementNode
+Visiting ExpressionListNode
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting ArrayReferenceNode
+base: 
+Visiting IdentifierNode
+ID: v
+offset: 
+Visiting ExpressionListNode
+Visiting IdentifierNode
+ID: i
+Operation: =
+Right Operand: 
+Visiting BinaryExpressionNode
+Left Operand: 
+Visiting IdentifierNode
+ID: i
+Operation: +
+Right Operand: 
+Visiting IntegerLiteralNode
+INT LITERAL: 1
+Visiting CompoundStatementNode
+Visiting ReturnNode
+Visiting ExpressionListNode
+Visiting IntegerLiteralNode
+INT LITERAL: 5
+Pretty Printer: CGen
+int func();
+int functionA();
+int functionB();
+void main(int argc, char *  *  argv){
+char c = 'a';
+char *  str = "blabla";
+int x = 0;
+int a, b;
+(a)=((b)=(2));
+(x)=((a)+(b));
+(x)=(2);
+(x)+=(5);
+(x)+=(3);
+(c)=('l');
+(str)=("LINUX");
+(a)=((((b)+(5))+(x),(x)=(5))+((x)*(x)));
+if((c)==('w'))(printf)("WINDOWS NAAAO\n");else/* skip */ ;
+(printf)("%d\n",5);
+(printf)("%d\n",(2)+(7));
+(printf)("%d\n",(2)+(((2)+(1))+(7)));
+}
+
+struct MyArray{
+int size;
+void *  data;
+
+};
+const int func(){
+struct MyArray arr;
+(arr.size)=(2);
+(arr.data)=((void *  )((malloc)((arr.size)*(sizeof (int )))));
+int v[ 10];
+for(int i = 0;(i)<(10);(i)++)((v)[i])=((i)+(1));
+return 5;
+}
+
+
+Identifier a : 0x1c915d0
+Identifier b : 0x1c915d0
+Identifier x : 0x1c914c0
+Identifier a : 0x1c915d0
+Identifier b : 0x1c915d0
+Identifier x : 0x1c914c0
+Identifier x : 0x1c914c0
+Identifier x : 0x1c914c0
+Identifier c : 0x1c91020
+Identifier str : 0x1c913b0
+Identifier a : 0x1c915d0
+Identifier b : 0x1c915d0
+Identifier x : 0x1c914c0
+Identifier x : 0x1c914c0
+Identifier x : 0x1c914c0
+Identifier x : 0x1c914c0
+Identifier c : 0x1c91020
+ERROR: Unknown identifier printf
+ERROR: Unknown identifier printf
+ERROR: Unknown identifier printf
+ERROR: Unknown identifier printf
+ERROR: Identifier func is already defined
+Identifier func : 0x1c90bb0
+Identifier arr : 0
+Identifier arr : 0
+ERROR: Unknown identifier malloc
+Identifier arr : 0
+Identifier i : 0x1c91b10
+Identifier i : 0x1c91b10
+Identifier v : 0
+Identifier i : 0x1c91b10
+Identifier i : 0x1c91b10
+Dumping Module

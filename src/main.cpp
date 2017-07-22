@@ -9,6 +9,8 @@ using namespace std;
 
 #include "cgen/ast_cgen.h"
 
+#include "llgen/ast_llgen.h"
+
 #include "typecheck/typecheck.h"
 
 #include "symtab/symbol_table.h"
@@ -28,7 +30,7 @@ int main(int argc, char **argv)
    //printctypes();
    //printrcctypes();
    //if(argc>1) testlex(argv[1]);
-   if(argc>1) testparse(argv<:1:>);
+   if(argc>1) testparse(argv[1]);
 
    return 0;
 }
@@ -38,14 +40,22 @@ void testparse(char *file)
    if(!newfile(file)) return;
    //symbolTable.pushScope();
    yyparse();
+
    ASTVisitor visitor;
    visitor.visit(astRoot);
-   //ASTCGen cgen;
-   //cout << cgen.visit(astRoot) << endl;
+
+   cout << "Pretty Printer: CGen" << endl;
+   ASTCGen cgen;
+   cout << cgen.visit(astRoot) << endl;
+
    TypeChecker typecheck;
    typecheck.visit(astRoot);
    //delete symbolTable.popScope();
 
+   ASTLLGen llgen(file);
+   llgen.visit(astRoot);
+   cout << "Dumping Module" << endl;
+   llgen.dump();
 }
 
 void testlex(char *file)

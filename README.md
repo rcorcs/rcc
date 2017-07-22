@@ -14,16 +14,19 @@ by ROCHA, Rodrigo Caetano
 * AST: build the abstract syntax tree (almost finished)
 * CGen: generate C code from the AST
 
-### TODO
+### Under Development
 
 * TypeCheck: perform semantic analysis
-* RIR: design and generate an intermediate representation
 * LLGen: generate LLVM IR code from the RIR
+
+### TODO
+* RIR: design and generate an intermediate representation
 * RIR backend: generate a RIR backend for different architectures
 * Optimizations on both AST and RIR level
 
 ### Building Dependencies
 
-* [bison](http://www.gnu.org/software/bison/) 
+* [bison](http://www.gnu.org/software/bison/)
 * [flex](http://flex.sourceforge.net/)
+* [llvm](http://llvm.org/)
 
