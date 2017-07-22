@@ -2,6 +2,7 @@
 #include <cstdlib>
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 #include "ast/ast.h"
@@ -56,6 +57,8 @@ void testparse(char *file)
    llgen.visit(astRoot);
    cout << "Dumping Module" << endl;
    llgen.dump();
+   string filename(file);
+   llgen.writeAssembly(filename+".ll");
 }
 
 void testlex(char *file)

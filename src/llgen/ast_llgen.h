@@ -8,7 +8,15 @@
 #include <llvm/IR/Module.h>
 #include <llvm/IR/Value.h>
 #include <llvm/IR/Verifier.h>
+/*
+#include <llvm/IR/DiagnosticInfo.h>
+#include <llvm/IRReader/IRReader.h>
 #include <llvm/Support/SourceMgr.h>
+#include <llvm/Bitcode/ReaderWriter.h>
+*/
+#include "llvm/Support/FileSystem.h"
+
+#include "llvm/Support/raw_ostream.h"
 
 #include <vector>
 #include <string>
@@ -100,6 +108,20 @@ public:
    LLGenContext visitUnionTypeNode(UnionTypeNode *node);
 
    void dump(){ if(M) M->dump(); }
+   void writeAssembly(std::string filename){
+      std::error_code EC;
+      llvm::raw_fd_ostream OS(filename, EC, llvm::sys::fs::F_None);
+      M->print(OS,nullptr);
+      OS.flush();
+   }
+/*
+   void writeBitcode(std::string filename){
+      std::error_code EC;
+      llvm::raw_fd_ostream OS(filename, EC, llvm::sys::fs::F_None);
+      llvm::WriteBitcodeToFile(M, OS);
+      OS.flush();
+   }
+*/
 private:
    llvm::LLVMContext Context;
    llvm::IRBuilder<> *Builder;
