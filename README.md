@@ -17,7 +17,7 @@ by ROCHA, Rodrigo Caetano
 ### Under Development
 
 * TypeCheck: perform semantic analysis
-* LLGen: generate LLVM IR code from the RIR
+* LLGen: generate LLVM IR code from the AST
 
 ### TODO
 * RIR: design and generate an intermediate representation
