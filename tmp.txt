@@ -645,74 +645,36 @@ Visiting ReturnNode
 Visiting ExpressionListNode
 Visiting IntegerLiteralNode
 INT LITERAL: 5
-Pretty Printer: CGen
-int func();
-int functionA();
-int functionB();
-void main(int argc, char *  *  argv){
-char c = 'a';
-char *  str = "blabla";
-int x = 0;
-int a, b;
-(a)=((b)=(2));
-(x)=((a)+(b));
-(x)=(2);
-(x)+=(5);
-(x)+=(3);
-(c)=('l');
-(str)=("LINUX");
-(a)=((((b)+(5))+(x),(x)=(5))+((x)*(x)));
-if((c)==('w'))(printf)("WINDOWS NAAAO\n");else/* skip */ ;
-(printf)("%d\n",5);
-(printf)("%d\n",(2)+(7));
-(printf)("%d\n",(2)+(((2)+(1))+(7)));
-}
-
-struct MyArray{
-int size;
-void *  data;
-
-};
-const int func(){
-struct MyArray arr;
-(arr.size)=(2);
-(arr.data)=((void *  )((malloc)((arr.size)*(sizeof (int )))));
-int v[ 10];
-for(int i = 0;(i)<(10);(i)++)((v)[i])=((i)+(1));
-return 5;
-}
-
-
-Identifier a : 0x26555d0
-Identifier b : 0x26555d0
-Identifier x : 0x26554c0
-Identifier a : 0x26555d0
-Identifier b : 0x26555d0
-Identifier x : 0x26554c0
-Identifier x : 0x26554c0
-Identifier x : 0x26554c0
-Identifier c : 0x2655020
-Identifier str : 0x26553b0
-Identifier a : 0x26555d0
-Identifier b : 0x26555d0
-Identifier x : 0x26554c0
-Identifier x : 0x26554c0
-Identifier x : 0x26554c0
-Identifier x : 0x26554c0
-Identifier c : 0x2655020
+Identifier a : 0x1bb1510
+Identifier b : 0x1bb1510
+Identifier x : 0x1bb1400
+Identifier a : 0x1bb1510
+Identifier b : 0x1bb1510
+Identifier x : 0x1bb1400
+Identifier x : 0x1bb1400
+Identifier x : 0x1bb1400
+Identifier c : 0x1bb0f60
+Identifier str : 0x1bb12f0
+Identifier a : 0x1bb1510
+Identifier b : 0x1bb1510
+Identifier x : 0x1bb1400
+Identifier x : 0x1bb1400
+Identifier x : 0x1bb1400
+Identifier x : 0x1bb1400
+Identifier c : 0x1bb0f60
 ERROR: Unknown identifier printf
 ERROR: Unknown identifier printf
 ERROR: Unknown identifier printf
 ERROR: Unknown identifier printf
 ERROR: Identifier func is already defined
-Identifier func : 0x2654bb0
+Identifier func : 0x1bb0aa0
 Identifier arr : 0
 Identifier arr : 0
 ERROR: Unknown identifier malloc
 Identifier arr : 0
-Identifier i : 0x2655b10
-Identifier i : 0x2655b10
+Identifier i : 0x1bb1a50
+Identifier i : 0x1bb1a50
 Identifier v : 0
-Identifier i : 0x2655b10
-Identifier i : 0x2655b10
+Identifier i : 0x1bb1a50
+Identifier i : 0x1bb1a50
 Dumping Module
