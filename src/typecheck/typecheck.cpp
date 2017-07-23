@@ -156,37 +156,39 @@ TypeCheckerContext TypeChecker::visitIdentifierNode(IdentifierNode *node){
 
 TypeCheckerContext TypeChecker::visitIntegerLiteralNode(IntegerLiteralNode *node){
    TypeCheckerContext ctx;
+   ctx.composeType(new PrimitiveType(TypeSpecifier::TYPE_INT));
    return ctx;
 }
 
 TypeCheckerContext TypeChecker::visitFloatLiteralNode(FloatLiteralNode *node){
    TypeCheckerContext ctx;
+   ctx.composeType(new PrimitiveType(TypeSpecifier::TYPE_FLOAT));
    return ctx;
 }
 
 TypeCheckerContext TypeChecker::visitStringLiteralNode(StringLiteralNode *node){
    TypeCheckerContext ctx;
+   ctx.composeType(new PointerType());
+   ctx.composeType(new PrimitiveType(TypeSpecifier::TYPE_CHAR));
    return ctx;
 }
 
 TypeCheckerContext TypeChecker::visitPostUnaryExpressionNode(PostUnaryExpressionNode *node){
-   visit(node->operand());
+   TypeCheckerContext ctx = visit(node->operand());
    //node->operation();
-   TypeCheckerContext ctx;
    return ctx;
 }
 
 TypeCheckerContext TypeChecker::visitPreUnaryExpressionNode(PreUnaryExpressionNode *node){
+   TypeCheckerContext ctx = visit(node->operand());
    //node->operation();
-   visit(node->operand());
-   TypeCheckerContext ctx;
    return ctx;
 }
 
 TypeCheckerContext TypeChecker::visitBinaryExpressionNode(BinaryExpressionNode *node){
-   visit(node->leftOperand());
+   TypeCheckerContext leftCtx = visit(node->leftOperand());
    //node->operation();
-   visit(node->rightOperand());
+   TypeCheckerContext rightCtx = visit(node->rightOperand());
    TypeCheckerContext ctx;
    return ctx;
 }
